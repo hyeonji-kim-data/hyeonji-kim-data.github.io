@@ -15,9 +15,9 @@
       color-scheme: light;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--fg); font-family: "Heebo", system-ui, sans-serif; font-size: 16px; line-height: 1.5; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: "Pretendard", system-ui, sans-serif; font-size: 16px; line-height: 1.5; }
     a { color: inherit; }
-    .wrap { max-width: 860px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+    .wrap { max-width: min(1400px, 80vw); margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
 
     header .wrap { display: flex; justify-content: flex-end; gap: 32px; padding-block: 28px; }
     header .wrap { align-items: center; }
@@ -52,7 +52,7 @@
     .meta2 { display: flex; align-items: center; gap: 26px; margin: 16px 0 14px; }
     .pill { background: var(--pill); color: #fff; font-weight: 900; font-size: 18px; padding: 0 10px; border-radius: 16px; }
     .cat { color: var(--muted); font-size: 20px; }
-    .work p { margin: 0; }
+    .work p { max-width: 680px; }
 
     footer .wrap { display: grid; justify-items: center; padding-block: 50px 40px; }
     .icons { display: flex; gap: 28px; }
