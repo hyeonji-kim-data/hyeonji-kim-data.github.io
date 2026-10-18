@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Portfolio Replica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap">
+  <style>
+    /* 시안 그대로 재현한 버전 */
+    :root {
+      --fg: #21243d; --muted: #8695a4; --band: #edf7fa; --accent: #ff6464;
+      --link: #00a8cc; --pill: #142850; --line: #e0e0e0; --bg: #ffffff;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: "Heebo", system-ui, sans-serif; font-size: 16px; line-height: 1.5; }
+    a { color: inherit; }
+    .wrap { max-width: 860px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+    header .wrap { display: flex; justify-content: flex-end; gap: 32px; padding-block: 28px; }
+    header a { text-decoration: none; font-weight: 500; font-size: 20px; }
+
+    .hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 48px; align-items: center; padding-block: 60px 72px; }
+    .hero h1 { margin: 0; font-size: 44px; line-height: 60px; font-weight: 700; }
+    .hero p { margin: 36px 0 34px; max-width: 520px; }
+    .btn { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; padding: 12px 24px; font-size: 20px; font-weight: 500; }
+    .photo { position: relative; width: 243px; aspect-ratio: 1; max-width: 100%; }
+    .photo::before { content: ""; position: absolute; inset: 9px 9px -9px -9px; border-radius: 50%; background: var(--band); }
+    .photo div { position: relative; width: 100%; height: 100%; border-radius: 50%; background: #c9d6df; display: grid; place-items: center; color: #6b7c8a; font-size: 14px; }
+
+    .band { background: var(--band); }
+    .band .wrap { padding-block: 24px 60px; }
+    .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+    .head h2 { margin: 0; font-size: 22px; font-weight: 400; }
+    .head a { color: var(--link); text-decoration: none; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+    .card { background: #fff; padding: 20px 22px 28px; box-shadow: 0 4px 10px rgba(171,190,209,.3); border-radius: 4px; }
+    .card h3 { margin: 0; font-size: 26px; line-height: 1.4; font-weight: 700; }
+    .card .meta { margin: 18px 0 14px; font-size: 18px; display: flex; flex-wrap: wrap; }
+    .card .meta span + span::before { content: "|"; margin: 0 22px; }
+    .card p { margin: 0; }
+
+    .works .wrap { padding-block: 24px 40px; }
+    .work { display: grid; grid-template-columns: 246px minmax(0, 1fr); gap: 20px; padding-block: 32px; border-bottom: 1px solid var(--line); }
+    .thumb { aspect-ratio: 246 / 180; border-radius: 6px; max-width: 100%; }
+    .work h3 { margin: 0; font-size: 30px; line-height: 1.3; font-weight: 700; }
+    .meta2 { display: flex; align-items: center; gap: 26px; margin: 16px 0 14px; }
+    .pill { background: var(--pill); color: #fff; font-weight: 900; font-size: 18px; padding: 0 10px; border-radius: 16px; }
+    .cat { color: var(--muted); font-size: 20px; }
+    .work p { margin: 0; }
+
+    footer .wrap { display: grid; justify-items: center; gap: 24px; padding-block: 50px 40px; }
+    .icons { display: flex; gap: 28px; }
+    .icons svg { width: 30px; height: 30px; fill: var(--fg); }
+    footer small { font-size: 14px; }
+
+    @media (max-width: 760px) {
+      header .wrap { justify-content: center; gap: 22px; }
+      .hero .wrap { grid-template-columns: 1fr; text-align: center; justify-items: center; padding-block: 16px 56px; }
+      .hero h1 { font-size: 30px; line-height: 42px; }
+      .photo { width: 180px; order: -1; }
+      .cards, .work { grid-template-columns: 1fr; }
+      .work h3 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <a href="#">Works</a><a href="#">Blog</a><a href="#">Contact</a>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <div>
+    <h1>Hi, I am John,<br>Creative Technologist</h1>
+    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    <a class="btn" href="#">Download Resume</a>
+  </div>
+  <div class="photo"><div>Profile photo</div></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <div class="head"><h2>Recent posts</h2><a href="#">View all</a></div>
+  <div class="cards">
+    <article class="card">
+      <h3>Making a design system from scratch</h3>
+      <div class="meta"><span>12 Feb 2020</span><span>Design, Pattern</span></div>
+      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    </article>
+    <article class="card">
+      <h3>Creating pixel perfect icons in Figma</h3>
+      <div class="meta"><span>12 Feb 2020</span><span>Figma, Icon Design</span></div>
+      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    </article>
+  </div>
+</div></section>
+
+<section class="works"><div class="wrap">
+  <div class="head"><h2>Featured works</h2></div>
+
+  <article class="work">
+    <div class="thumb" style="background:#1f2140"></div>
+    <div>
+      <h3>Designing Dashboards</h3>
+      <div class="meta2"><span class="pill">2020</span><span class="cat">Dashboard</span></div>
+      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    </div>
+  </article>
+
+  <article class="work">
+    <div class="thumb" style="background:#fbc4a5"></div>
+    <div>
+      <h3>Vibrant Portraits of 2020</h3>
+      <div class="meta2"><span class="pill">2018</span><span class="cat">Illustration</span></div>
+      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    </div>
+  </article>
+
+  <article class="work">
+    <div class="thumb" style="background:#262420"></div>
+    <div>
+      <h3>36 Days of Malayalam type</h3>
+      <div class="meta2"><span class="pill">2018</span><span class="cat">Typography</span></div>
+      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    </div>
+  </article>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="icons">
+    <svg viewBox="0 0 24 24" aria-label="Facebook"><path d="M22 2H2v20h10.6v-7.7H10v-3h2.6V9.1c0-2.6 1.6-4 3.9-4 1.1 0 2 .1 2.3.1v2.7h-1.6c-1.3 0-1.5.6-1.5 1.5v1.9h3l-.4 3h-2.6V22H22z"/></svg>
+    <svg viewBox="0 0 24 24" aria-label="Instagram"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM17.3 5.5a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zM12 1.8c-2.8 0-3.1 0-4.2.1C3.5 2.1 2.1 3.5 1.9 7.8 1.8 8.9 1.8 9.2 1.8 12s0 3.1.1 4.2c.2 4.3 1.6 5.7 5.9 5.9 1.1.1 1.4.1 4.2.1s3.1 0 4.2-.1c4.3-.2 5.7-1.6 5.9-5.9.1-1.1.1-1.4.1-4.2s0-3.1-.1-4.2c-.2-4.3-1.6-5.7-5.9-5.9-1.1-.1-1.4-.1-4.2-.1zm0 1.8c2.7 0 3 0 4.1.1 2.8.1 4 1.4 4.1 4.1.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 2.7-1.4 4-4.1 4.1-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-2.8-.1-4-1.4-4.1-4.1-.1-1.1-.1-1.4-.1-4.1s0-3 .1-4.1c.1-2.7 1.4-4 4.1-4.1 1.1-.1 1.4-.1 4.1-.1z"/></svg>
+    <svg viewBox="0 0 24 24" aria-label="Twitter"><path d="M23 4.6c-.8.4-1.7.6-2.6.7.9-.6 1.6-1.4 2-2.5-.9.5-1.9.9-2.9 1.1a4.5 4.5 0 0 0-7.7 4.1A12.8 12.8 0 0 1 2.5 3.3a4.5 4.5 0 0 0 1.4 6 4.5 4.5 0 0 1-2-.6v.1a4.5 4.5 0 0 0 3.6 4.4 4.5 4.5 0 0 1-2 .1 4.5 4.5 0 0 0 4.2 3.1A9 9 0 0 1 1 18.3 12.8 12.8 0 0 0 7.9 20.3c8.3 0 12.8-6.9 12.8-12.8v-.6c.9-.6 1.7-1.4 2.3-2.3z"/></svg>
+    <svg viewBox="0 0 24 24" aria-label="LinkedIn"><path d="M22 2H2v20h20zM8 19H5V9.5h3zM6.5 8.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM19 19h-3v-4.6c0-1.1 0-2.5-1.5-2.5S12.8 13 12.8 14.3V19h-3V9.5h2.8v1.3c.4-.8 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.6z"/></svg>
+  </div>
+  <small>Copyright ©2020 All rights reserved</small>
+</div></footer>
+
+</body>
+</html>
