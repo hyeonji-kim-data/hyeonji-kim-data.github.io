@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- 프로젝트마다 바꾸기: 브라우저 탭에 보이는 제목 -->
+  <title>Early Mortality Prediction for ICU Sepsis Patients | Hyeonji Kim</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    /* =========================================================
+       색상·글꼴: 메인 페이지(index.html)와 같은 값
+       여기 값만 바꾸면 이 페이지 전체에 반영돼요
+       ========================================================= */
+    :root {
+      --fg: #343434;      /* 기본 글자 */
+      --muted: #8695a4;   /* 날짜, 캡션 같은 보조 글자 */
+      --band: #eef4f1;    /* 연한 민트 배경 */
+      --pill: #00525e;    /* 딥 틸: 제목, 강조 */
+      --link: #3b5c5d;    /* 링크, 섹션 소제목 */
+      --line: #d2e8e3;    /* 구분선 */
+      --mint: #e1ece8;    /* 배지 배경 */
+      --hover: #f0674a;   /* 마우스 올렸을 때 */
+      --bg: #ffffff;
+      --font: "Pretendard", system-ui, -apple-system, sans-serif;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.7; }
+    a { color: var(--link); }
+    a:hover { color: var(--hover); }
+    a:focus-visible { outline: 2px solid var(--pill); outline-offset: 3px; border-radius: 3px; }
+    .wrap { max-width: 1000px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+    /* ---------- 상단 메뉴 (메인과 동일) ---------- */
+    header .wrap { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 28px; max-width: 1440px; }
+    header nav { display: flex; align-items: center; gap: 32px; }
+    header a { color: var(--fg); text-decoration: none; font-weight: 700; font-size: 20px; display: inline-flex; align-items: center; }
+    header a:hover { color: var(--hover); }
+    header svg { width: 24px; height: 24px; fill: currentColor; stroke: var(--bg); stroke-width: 1.6; stroke-linejoin: round; }
+    header .home { font-size: 18px; }
+
+    /* ---------- 제목 영역 ---------- */
+    .title .wrap { padding-block: 32px 40px; }
+    .back { font-size: 15px; font-weight: 600; text-decoration: none; color: var(--muted); }
+    .title h1 { margin: 14px 0 10px; font-size: 40px; line-height: 1.3; font-weight: 700; color: var(--pill); text-wrap: balance; }
+    .summary { margin: 0 0 22px; font-size: 18px; max-width: 64ch; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 18px; font-size: 15px; color: var(--muted); }
+    .meta b { color: var(--fg); font-weight: 600; margin-right: 6px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .badge { font-size: 14px; font-weight: 500; padding: 2px 12px; border-radius: 999px; background: var(--mint); color: var(--pill); }
+    .badge.method { background: transparent; border: 1px solid #aad5cb; }
+
+    /* ---------- 본문: 왼쪽 목차 + 오른쪽 내용 ---------- */
+    .doc { border-top: 1px solid var(--line); }
+    .doc .wrap { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 56px; padding-block: 40px 80px; align-items: start; }
+    .toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); }
+    .toc p { margin: 0 0 10px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 2px solid var(--line); }
+    .toc a { display: block; padding: 5px 0 5px 14px; margin-left: -2px; border-left: 2px solid transparent; color: var(--fg); text-decoration: none; font-size: 15px; }
+    .toc a:hover { color: var(--hover); }
+    .toc a.on { border-left-color: var(--pill); color: var(--pill); font-weight: 600; }
+
+    main section { padding-bottom: 48px; scroll-margin-top: 24px; }
+    main section + section { padding-top: 40px; border-top: 1px solid var(--line); }
+    main h2 { margin: 0 0 16px; font-size: 24px; font-weight: 700; color: var(--link); }
+    main h2 span { color: var(--muted); font-weight: 500; margin-right: 8px; }
+    main p, main li { max-width: 68ch; }
+    main p { margin: 0 0 14px; }
+    main ul { margin: 0 0 14px; padding-left: 20px; }
+    main li { margin-bottom: 6px; }
+    main li::marker { color: var(--pill); }
+    main b { font-weight: 600; }
+
+    /* 그림 자리 */
+    figure { margin: 0 0 14px; }
+    .fig { aspect-ratio: 16 / 9; width: 100%; background: var(--band); border: 1px dashed #aad5cb; border-radius: 6px; display: grid; place-items: center; color: var(--muted); font-size: 15px; text-align: center; padding: 16px; }
+    figure img { display: block; width: 100%; border-radius: 6px; border: 1px solid var(--line); }
+    figcaption { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+    /* 결과 표 */
+    .table-scroll { overflow-x: auto; margin-bottom: 14px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: tabular-nums; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { font-size: 13px; font-weight: 600; letter-spacing: .03em; color: var(--muted); background: var(--band); }
+    tr.best td { color: var(--pill); font-weight: 700; }
+
+    /* 핵심 수치 */
+    .numbers { display: flex; flex-wrap: wrap; gap: 12px 40px; margin: 4px 0 20px; }
+    .numbers div { display: grid; }
+    .numbers strong { font-size: 30px; font-weight: 700; color: var(--pill); line-height: 1.2; font-variant-numeric: tabular-nums; }
+    .numbers span { font-size: 14px; color: var(--muted); }
+
+    /* 링크 버튼 */
+    .links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .links a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid #aad5cb; border-radius: 4px; text-decoration: none; font-weight: 600; color: var(--pill); }
+    .links a:hover { border-color: var(--hover); color: var(--hover); }
+
+    .guide { color: var(--muted); font-size: 14px; }  /* 작성 안내 문구: 내용을 채우면 지우세요 */
+
+    footer .wrap { padding-block: 32px 40px; text-align: center; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+
+    @media (max-width: 760px) {
+      header .wrap { gap: 16px; }
+      header nav { gap: 20px; }
+      .title h1 { font-size: 30px; }
+      .doc .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-top: 24px; }
+      .toc { position: static; }
+      .toc ol { grid-auto-flow: row; }
+    }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  </style>
+</head>
+<body>
+
+<!-- ================= 상단 메뉴 ================= -->
+<header><div class="wrap">
+  <a class="home" href="index.html">Hyeonji Kim</a>
+  <nav>
+    <a href="mailto:your.email@example.com" aria-label="Email" title="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v16H2z M3.5 5.5 12 12l8.5-6.5"/></svg>
+    </a>
+    <a href="files/CV.pdf" target="_blank" rel="noopener" title="CV">CV</a>
+    <a href="https://www.linkedin.com/in/your-id/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">in</a>
+  </nav>
+</div></header>
+
+<!-- ================= 제목 영역 ================= -->
+<section class="title"><div class="wrap">
+  <a class="back" href="index.html">← All projects</a>
+  <h1>Early Mortality Prediction for ICU Sepsis Patients</h1>
+  <p class="summary">프로젝트를 한 문장으로 요약해 주세요. 예: Predicting in-hospital mortality from the first hours of ICU data so clinicians can flag high-risk sepsis patients early.</p>
+
+  <div class="meta">
+    <span><b>Date</b>Jun 2025</span>
+    <span><b>Type</b>Bootcamp team project</span>
+    <span><b>Role</b>Feature engineering, modeling</span>
+  </div>
+
+  <!-- 사용 도구 (민트 배경) -->
+  <div class="badges">
+    <span class="badge">Python</span>
+    <span class="badge">pandas</span>
+    <span class="badge">scikit-learn</span>
+    <span class="badge">SQL</span>
+  </div>
+  <!-- 사용 방법·모델 (테두리만) -->
+  <div class="badges">
+    <span class="badge method">Logistic Regression</span>
+    <span class="badge method">XGBoost</span>
+    <span class="badge method">SHAP</span>
+  </div>
+</div></section>
+
+<!-- ================= 본문 ================= -->
+<div class="doc"><div class="wrap">
+
+  <!-- 왼쪽 목차 -->
+  <nav class="toc" aria-label="Sections">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#figure">Figure</a></li>
+      <li><a href="#goal">Goal</a></li>
+      <li><a href="#method">Methodology &amp; Summary</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#decision">From Prediction to Decision</a></li>
+      <li><a href="#code">Code</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 1. Figure -->
+    <section id="figure">
+      <h2><span>01</span>Figure</h2>
+      <figure>
+        <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/sepsis-main.png" alt="설명"> -->
+        <div class="fig">대표 이미지 자리<br>대시보드 화면이나 핵심 결과 그래프 (가로형 16:9 권장)</div>
+        <figcaption>그림 설명을 한 줄로 적어주세요.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 2. Goal -->
+    <section id="goal">
+      <h2><span>02</span>Goal</h2>
+      <p class="guide">배경과 데이터를 2~3문장으로 쓰고, 이 프로젝트에서 하려던 것을 글머리표로 정리해 주세요.</p>
+      <p>Sepsis is one of the leading causes of death in intensive care units, and outcomes depend heavily on how early
+        high-risk patients are identified. Using <b>데이터 이름 (예: MIMIC-IV)</b>, which contains <b>환자 수</b> ICU stays, this project asked:</p>
+      <ul>
+        <li>목표 1: 어떤 시점의 데이터로 무엇을 예측하는지</li>
+        <li>목표 2: 어떤 변수가 위험도에 영향을 주는지</li>
+        <li>목표 3: 결과를 어떻게 활용할 수 있는지</li>
+      </ul>
+    </section>
+
+    <!-- 3. Methodology & Summary -->
+    <section id="method">
+      <h2><span>03</span>Methodology &amp; Summary</h2>
+      <ul>
+        <li><b>Data:</b> 데이터 출처, 기간, 사용한 표(테이블)와 대상 환자 기준</li>
+        <li><b>Preprocessing:</b> 결측치 처리, 시간 구간 설정, 이상치 처리</li>
+        <li><b>Features:</b> 만든 변수 (활력 징후, 검사 수치 등)</li>
+        <li><b>Models:</b> 비교한 모델과 기준 모델(baseline)</li>
+        <li><b>Evaluation:</b> 평가 지표와 검증 방법 (예: AUROC, recall, 5-fold CV)</li>
+      </ul>
+      <figure>
+        <div class="fig">방법을 보여주는 그림 (선택)<br>파이프라인 도식, 변수 중요도 그래프 등</div>
+        <figcaption>그림 설명</figcaption>
+      </figure>
+    </section>
+
+    <!-- 4. Results -->
+    <section id="results">
+      <h2><span>04</span>Results</h2>
+      <!-- 핵심 수치 2~3개 (실제 값으로 바꿔주세요) -->
+      <div class="numbers">
+        <div><strong>0.00</strong><span>AUROC</span></div>
+        <div><strong>00%</strong><span>Recall</span></div>
+        <div><strong>0h</strong><span>Earlier warning</span></div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Model</th><th>AUROC</th><th>Recall</th><th>F1</th></tr></thead>
+          <tbody>
+            <tr><td>Logistic Regression</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+            <tr><td>Random Forest</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+            <!-- 가장 좋은 모델 줄에 class="best"를 붙이면 강조돼요 -->
+            <tr class="best"><td>XGBoost</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>결과를 2~3문장으로 해석해 주세요. 어떤 모델이 왜 좋았는지, 어떤 변수가 중요했는지.</p>
+    </section>
+
+    <!-- 5. From Prediction to Decision -->
+    <section id="decision">
+      <h2><span>05</span>From Prediction to Decision</h2>
+      <p class="guide">예측 결과를 실제로 어떻게 쓸 수 있는지 적는 섹션이에요. 대시보드 프로젝트라면 제목을 "From Analysis to Decision"으로 바꾸세요.</p>
+      <ul>
+        <li>누가 이 결과를 쓰는지 (예: 중환자실 의료진)</li>
+        <li>어떤 결정이 달라지는지 (예: 위험 점수 상위 환자 우선 모니터링)</li>
+        <li>한계와 다음 단계 (예: 외부 병원 데이터로 검증 필요)</li>
+      </ul>
+    </section>
+
+    <!-- 6. Code -->
+    <section id="code">
+      <h2><span>06</span>Code</h2>
+      <p>전체 분석 과정과 코드는 아래에서 볼 수 있어요.</p>
+      <div class="links">
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub repository ↗</a>
+        <!-- 대시보드나 발표 자료가 있으면 추가 -->
+        <a href="#" target="_blank" rel="noopener">Presentation slides ↗</a>
+      </div>
+    </section>
+  </main>
+</div></div>
+
+<footer><div class="wrap">Copyright ©2026 Hyeonji Kim. All rights reserved.</div></footer>
+
+<script>
+  // 스크롤 위치에 맞춰 왼쪽 목차의 현재 섹션을 표시해요
+  (function () {
+    var links = document.querySelectorAll('.toc a');
+    var sections = Array.prototype.map.call(links, function (a) { return document.querySelector(a.getAttribute('href')); });
+    function update() {
+      var current = 0;
+      sections.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < window.innerHeight * 0.35) current = i; });
+      links.forEach(function (a, i) { a.classList.toggle('on', i === current); });
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+</body>
+</html>
