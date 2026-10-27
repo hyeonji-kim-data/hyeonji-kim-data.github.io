@@ -127,27 +127,27 @@
 <!-- ================= 제목 영역 ================= -->
 <section class="title"><div class="wrap">
   <a class="back" href="index.html">← All projects</a>
-  <h1>Early Mortality Prediction for ICU Sepsis Patients</h1>
-  <p class="summary">프로젝트를 한 문장으로 요약해 주세요. 예: Predicting in-hospital mortality from the first hours of ICU data so clinicians can flag high-risk sepsis patients early.</p>
+  <h1>Predicting Sepsis Mortality through Model Tuning and Threshold Analysis with PyTorch</h1>
+  <p class="summary">Predicted the risk of death for ICU sepsis patients from their first 24 hours of data, then lowered the cutoff for flagging a patient as high risk so the model caught more of the patients who died (45% → 63%).</p>
 
   <div class="meta">
     <span><b>Date</b>Jun 2025</span>
-    <span><b>Type</b>Bootcamp team project</span>
-    <span><b>Role</b>Feature engineering, modeling</span>
+    <span><b>Type</b>Bootcamp team project (5 members)</span>
+    <span><b>Role</b>Deep learning modeling, hyperparameter tuning</span>
   </div>
 
   <!-- 사용 도구 (민트 배경) -->
   <div class="badges">
     <span class="badge">Python</span>
-    <span class="badge">pandas</span>
+    <span class="badge">PyTorch</span>
     <span class="badge">scikit-learn</span>
-    <span class="badge">SQL</span>
+    <span class="badge">Optuna</span>
   </div>
   <!-- 사용 방법·모델 (테두리만) -->
   <div class="badges">
-    <span class="badge method">Logistic Regression</span>
-    <span class="badge method">XGBoost</span>
-    <span class="badge method">SHAP</span>
+    <span class="badge method">TabNet</span>
+    <span class="badge method">FT-Transformer</span>
+    <span class="badge method">Permutation importance</span>
   </div>
 </div></section>
 
@@ -172,22 +172,21 @@
     <section id="figure">
       <h2><span>01</span>Figure</h2>
       <figure>
-        <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/sepsis-main.png" alt="설명"> -->
-        <div class="fig">대표 이미지 자리<br>대시보드 화면이나 핵심 결과 그래프 (가로형 16:9 권장)</div>
-        <figcaption>그림 설명을 한 줄로 적어주세요.</figcaption>
+        <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/sepsis-confusion-matrix.png" alt="Confusion matrices of FT-Transformer at threshold 0.5 and at the validation-based threshold"> -->
+        <div class="fig">FT-Transformer (after tuning) confusion matrix<br>figures/FTT_optuna/01_confusion_matrix.png</div>
+        <figcaption>How many deaths were caught or missed when the decision threshold was lowered from 0.5 to a validation-based value.</figcaption>
       </figure>
     </section>
 
     <!-- 2. Goal -->
     <section id="goal">
       <h2><span>02</span>Goal</h2>
-      <p class="guide">배경과 데이터를 2~3문장으로 쓰고, 이 프로젝트에서 하려던 것을 글머리표로 정리해 주세요.</p>
-      <p>Sepsis is one of the leading causes of death in intensive care units, and outcomes depend heavily on how early
-        high-risk patients are identified. Using <b>데이터 이름 (예: MIMIC-IV)</b>, which contains <b>환자 수</b> ICU stays, this project asked:</p>
+      <p>Sepsis is a leading cause of death in intensive care units, and how early high-risk patients are recognized strongly affects survival.
+        Using data on <b>911 ICU sepsis patients</b> provided by the training program (the worst value of each measurement during the first 24 hours after admission), this project asked:</p>
       <ul>
-        <li>목표 1: 어떤 시점의 데이터로 무엇을 예측하는지</li>
-        <li>목표 2: 어떤 변수가 위험도에 영향을 주는지</li>
-        <li>목표 3: 결과를 어떻게 활용할 수 있는지</li>
+        <li>Can in-hospital death be predicted from first-day information alone?</li>
+        <li>How should the decision threshold be set so that as few deaths as possible are missed?</li>
+        <li>Which clinical measurements does the model rely on most?</li>
       </ul>
     </section>
 
@@ -195,59 +194,75 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Data:</b> 데이터 출처, 기간, 사용한 표(테이블)와 대상 환자 기준</li>
-        <li><b>Preprocessing:</b> 결측치 처리, 시간 구간 설정, 이상치 처리</li>
-        <li><b>Features:</b> 만든 변수 (활력 징후, 검사 수치 등)</li>
-        <li><b>Models:</b> 비교한 모델과 기준 모델(baseline)</li>
-        <li><b>Evaluation:</b> 평가 지표와 검증 방법 (예: AUROC, recall, 5-fold CV)</li>
+        <li><b>Data:</b> ICU sepsis patient data provided by the training program (911 patients, 270 deaths or about 30%; original source not disclosed), with 34 variables: 23 measurements such as age, blood pressure, urine output and level of consciousness, and 11 yes/no items such as underlying conditions and mechanical ventilation. Split into 637 patients for training and 274 for testing; the test set was used only for the final evaluation.</li>
+        <li><b>Feature selection (team):</b> The team selected variables in two stages.
+          <ul>
+            <li>Stage 1: SHAP importance and VIF were used to drop variables that contributed little or overlapped with others, reducing 50 variables to 34.</li>
+            <li>Stage 2: The team checked which variables ranked high across several models and removed five that were barely used, leaving 29.</li>
+            <li>The variables ranked highest across models were, in order, A-a gradient (how well the lungs transfer oxygen), PaO2/FiO2 (blood oxygen ratio), APACHE II (a severity score), lactate and urine output.</li>
+          </ul>
+        </li>
+        <li><b>Team scope:</b> The team compared 12 models: five machine learning models (SVM, XGBoost, LightGBM, CatBoost, Random Forest) and seven deep learning models (MLP, ResNet, TabNet, DANet, SAINT, FT-Transformer, TabPFN), and selected CatBoost as the best performer.</li>
+        <li><b>My role:</b> I trained and tuned two of the deep learning models, using the 34 variables from Stage 1.
+          <ul>
+            <li><b>TabNet</b> is a deep learning model for tables that chooses which variables to look at in each step.</li>
+            <li><b>FT-Transformer</b> applies the transformer architecture used in language translation to tabular data.</li>
+          </ul>
+        </li>
+        <li><b>Tuning:</b> Used Optuna to search model settings (number of layers, learning rate, etc.) automatically, choosing the combination with the highest AUC under 5-fold cross-validation, which splits the training data into five parts and validates on each in turn.</li>
+        <li><b>Decision threshold:</b> The model outputs a probability of death between 0 and 1, and the default rule is "high risk if 0.5 or above." Because only 30% of patients died, many of them received probabilities below 0.5. I reset the threshold to the value that maximized F1 (a score that balances precision and recall) on validation data.</li>
+        <li><b>Evaluation:</b> AUC (how well the model separates patients who died from those who survived; closer to 1 is better), recall (the share of actual deaths the model caught) and precision (the share of patients flagged as high risk who actually died). All results are averages over five random seeds.</li>
       </ul>
-      <figure>
-        <div class="fig">방법을 보여주는 그림 (선택)<br>파이프라인 도식, 변수 중요도 그래프 등</div>
-        <figcaption>그림 설명</figcaption>
-      </figure>
     </section>
 
     <!-- 4. Results -->
     <section id="results">
       <h2><span>04</span>Results</h2>
-      <!-- 핵심 수치 2~3개 (실제 값으로 바꿔주세요) -->
       <div class="numbers">
-        <div><strong>0.00</strong><span>AUROC</span></div>
-        <div><strong>00%</strong><span>Recall</span></div>
-        <div><strong>0h</strong><span>Earlier warning</span></div>
+        <div><strong>0.77</strong><span>AUC (FT-Transformer, tuned)</span></div>
+        <div><strong>45% → 63%</strong><span>Deaths detected (recall)</span></div>
+        <div><strong>911</strong><span>ICU sepsis patients</span></div>
       </div>
       <div class="table-scroll">
         <table>
-          <thead><tr><th>Model</th><th>AUROC</th><th>Recall</th><th>F1</th></tr></thead>
+          <thead><tr><th>Model</th><th>AUC</th><th>Recall</th><th>Precision</th><th>F1</th></tr></thead>
           <tbody>
-            <tr><td>Logistic Regression</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
-            <tr><td>Random Forest</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
-            <!-- 가장 좋은 모델 줄에 class="best"를 붙이면 강조돼요 -->
-            <tr class="best"><td>XGBoost</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+            <tr><td>TabNet (before tuning)</td><td>0.676</td><td>0.59</td><td>0.40</td><td>0.47</td></tr>
+            <tr><td>TabNet (after tuning)</td><td>0.699</td><td>0.53</td><td>0.45</td><td>0.48</td></tr>
+            <tr><td>FT-Transformer (before tuning)</td><td>0.754</td><td>0.68</td><td>0.47</td><td>0.54</td></tr>
+            <tr class="best"><td>FT-Transformer (after tuning)</td><td>0.770</td><td>0.63</td><td>0.52</td><td>0.54</td></tr>
           </tbody>
         </table>
       </div>
-      <p>결과를 2~3문장으로 해석해 주세요. 어떤 모델이 왜 좋았는지, 어떤 변수가 중요했는지.</p>
+      <p class="guide">Recall, precision and F1 are measured at the validation-based threshold. Mean of five seeds on the test set (274 patients).</p>
+      <ul>
+        <li><b>FT-Transformer separated patients better.</b> Its AUC was higher than TabNet's, and tuning raised the AUC of both models by about 0.02.</li>
+        <li><b>At the default threshold of 0.5, more than half of deaths were missed.</b> FT-Transformer caught only 45% of deaths at 0.5. Lowering the threshold raised this to 63%, at the cost of a small drop in precision from 57% to 52%.</li>
+        <li><b>Level of consciousness (GCS) mattered in both models.</b> Measured by how much performance drops when a variable's values are shuffled, GCS ranked near the top for both models. TabNet also relied on a severity score (APACHE II), and FT-Transformer on whether the patient was immunocompromised. APACHE II also ranked third in the team's feature selection, so the same variable stood out under a different method. This shows what the models used for prediction, not what causes death.</li>
+      </ul>
+      <figure>
+        <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/sepsis-permutation-importance.png" alt="Top 10 variables by permutation importance for FT-Transformer"> -->
+        <div class="fig">FT-Transformer (after tuning) permutation importance<br>figures/FTT_optuna/05_permutation_importance.png</div>
+        <figcaption>Top 10 variables by how much AUC drops when each variable is shuffled.</figcaption>
+      </figure>
     </section>
 
     <!-- 5. From Prediction to Decision -->
     <section id="decision">
       <h2><span>05</span>From Prediction to Decision</h2>
-      <p class="guide">예측 결과를 실제로 어떻게 쓸 수 있는지 적는 섹션이에요. 대시보드 프로젝트라면 제목을 "From Analysis to Decision"으로 바꾸세요.</p>
       <ul>
-        <li>누가 이 결과를 쓰는지 (예: 중환자실 의료진)</li>
-        <li>어떤 결정이 달라지는지 (예: 위험 점수 상위 환자 우선 모니터링)</li>
-        <li>한계와 다음 단계 (예: 외부 병원 데이터로 검증 필요)</li>
+        <li><b>Who would use it:</b> ICU clinicians, to prioritize monitoring of patients at high risk on their first day.</li>
+        <li><b>What decision changes:</b> In clinical settings, missing a high-risk patient (a false negative) is far more costly than an unnecessary alert (a false positive), so where the threshold is set matters as much as the model itself. Rather than reporting accuracy alone, I showed in numbers the trade-off between missed deaths and extra alerts, and set the threshold based on it.</li>
+        <li><b>Limitations and next steps:</b> The data cover 911 patients from an undisclosed source, so performance needs to be checked on data from other hospitals. Recall varied considerably across seeds (±0.18). Real-world use would require agreeing with clinicians on an acceptable alert level.</li>
       </ul>
     </section>
 
     <!-- 6. Code -->
     <section id="code">
       <h2><span>06</span>Code</h2>
-      <p>전체 분석 과정과 코드는 아래에서 볼 수 있어요.</p>
+      <p>The full analysis, code and figures are in the GitHub README.</p>
       <div class="links">
         <a href="https://github.com/" target="_blank" rel="noopener">GitHub repository ↗</a>
-        <!-- 대시보드나 발표 자료가 있으면 추가 -->
         <a href="#" target="_blank" rel="noopener">Presentation slides ↗</a>
       </div>
     </section>
