@@ -194,25 +194,32 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Data:</b> ICU sepsis patient data provided by the training program (911 patients, 270 deaths or about 30%; original source not disclosed), with 34 variables: 23 measurements such as age, blood pressure, urine output and level of consciousness, and 11 yes/no items such as underlying conditions and mechanical ventilation. Split into 637 patients for training and 274 for testing; the test set was used only for the final evaluation.</li>
+        <li><b>Data:</b> Data from 911 ICU patients with sepsis provided by the training program. The dataset included 270 in-hospital deaths (approximately 30%); the original data source was not disclosed. The 34 variables used after the first stage of feature selection comprised 23 clinical measurements, such as age, blood pressure, urine output, and level of consciousness, and 11 binary variables indicating factors such as underlying conditions and mechanical ventilation.</li>
         <li><b>Feature selection (team):</b> The team selected variables in two stages.
           <ul>
-            <li>Stage 1: SHAP importance and VIF were used to drop variables that contributed little or overlapped with others, reducing 50 variables to 34.</li>
-            <li>Stage 2: The team checked which variables ranked high across several models and removed five that were barely used, leaving 29.</li>
+            <li>Stage 1: SHAP-based feature importance and variance inflation factor (VIF) analysis were used to identify features with limited predictive contributions or substantial overlap with other variables, reducing the feature set from 50 to 34.</li>
+            <li>Stage 2: The team compared feature importance rankings across multiple models and removed five features that consistently ranked low or contributed little, leaving 29 features for the final model comparison.</li>
             <li>The variables ranked highest across models were, in order, A-a gradient (how well the lungs transfer oxygen), PaO2/FiO2 (blood oxygen ratio), APACHE II (a severity score), lactate and urine output.</li>
           </ul>
         </li>
-        <li><b>Team scope:</b> The team compared 12 models: five machine learning models (SVM, XGBoost, LightGBM, CatBoost, Random Forest) and seven deep learning models (MLP, ResNet, TabNet, DANet, SAINT, FT-Transformer, TabPFN), and selected CatBoost as the best performer.</li>
-        <li><b>My role:</b> I trained and tuned two of the deep learning models, using the 34 variables from Stage 1.
+        <li><b>Team scope:</b> The team compared 12 models: five machine learning models (SVM, XGBoost, LightGBM, CatBoost, and Random Forest) and seven deep learning models (MLP, ResNet, TabNet, DANet, SAINT, FT-Transformer, and TabPFN). CatBoost achieved the best overall performance among the models evaluated.</li>
+        <li><b>My role:</b> I trained and tuned two of the deep learning models, TabNet and FT-Transformer, using the 34 variables from Stage 1.
           <ul>
-            <li><b>TabNet</b> is a deep learning model for tables that chooses which variables to look at in each step.</li>
-            <li><b>FT-Transformer</b> applies the transformer architecture used in language translation to tabular data.</li>
+            <li><b>TabNet</b> is a deep learning model for tabular data that learns which features to focus on at each decision step.</li>
+            <li><b>FT-Transformer</b> adapts the Transformer architecture, widely used in language processing, to tabular data</li>
           </ul>
         </li>
-        <li><b>Tuning:</b> Used Optuna to search model settings (number of layers, learning rate, etc.) automatically, choosing the combination with the highest AUC under 5-fold cross-validation, which splits the training data into five parts and validates on each in turn.</li>
-        <li><b>Decision threshold:</b> The model outputs a probability of death between 0 and 1, and the default rule is "high risk if 0.5 or above." Because only 30% of patients died, many of them received probabilities below 0.5. I reset the threshold to the value that maximized F1 (a score that balances precision and recall) on validation data.</li>
-        <li><b>Evaluation:</b> AUC (how well the model separates patients who died from those who survived; closer to 1 is better), recall (the share of actual deaths the model caught) and precision (the share of patients flagged as high risk who actually died). All results are averages over five random seeds.</li>
-      </ul>
+        <li><b>Tuning:</b> Used Optuna to automatically search model settings such as the number of layers and the learning rate, choosing the one with the highest average AUC under five-fold cross-validation (each fifth of the training data takes a turn as the validation set).</li>
+        <li><b>Decision threshold:</b> The model outputs a probability of death between 0 and 1, and patients at 0.5 or above are flagged as high risk by default. Because only about 30% of patients died, many of them scored below 0.5 and were missed. I instead chose the threshold that maximized F1 (a balance of precision and recall) on validation data.</li>
+        <li><b>Evaluation:</b> Model performance was evaluated using:
+          <ul>
+            <li><b>AUC:</b> How well the model separates patients who died from those who survived (1.0 = perfect, 0.5 = no better than chance).</li>
+            <li><b>Recall:</b> The proportion of patients who died that the model correctly identified as high risk.</li>
+            <li><b>Precision:</b> The proportion of patients classified as high risk who actually died.</li>
+            <li><b>F1:</b> A single score that balances precision and recall.</li>
+          </ul>
+          All results are averages over five random seeds.
+        </li>
     </section>
 
     <!-- 4. Results -->
@@ -238,7 +245,13 @@
       <ul>
         <li><b>FT-Transformer separated patients better.</b> Its AUC was higher than TabNet's, and tuning raised the AUC of both models by about 0.02.</li>
         <li><b>At the default threshold of 0.5, more than half of deaths were missed.</b> FT-Transformer caught only 45% of deaths at 0.5. Lowering the threshold raised this to 63%, at the cost of a small drop in precision from 57% to 52%.</li>
-        <li><b>Level of consciousness (GCS) mattered in both models.</b> Measured by how much performance drops when a variable's values are shuffled, GCS ranked near the top for both models. TabNet also relied on a severity score (APACHE II), and FT-Transformer on whether the patient was immunocompromised. APACHE II also ranked third in the team's feature selection, so the same variable stood out under a different method. This shows what the models used for prediction, not what causes death.</li>
+        <li><b>Level of consciousness (GCS) mattered in both models.</b> <li><b>Both models relied most on level of consciousness (GCS).</b>
+          <ul>
+            <li>To find which variables mattered, I shuffled one variable at a time and measured how much the AUC dropped. GCS was near the top for both models.</li>
+            <li>TabNet also relied on a severity score (APACHE II), which was among the team's top variables as well. FT-Transformer also relied on whether the patient had a weakened immune system.</li>
+            <li>These are the variables the models used to make predictions, not proven causes of death.</li>
+          </ul>
+        </li></li>
       </ul>
       <figure>
         <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/sepsis-permutation-importance.png" alt="Top 10 variables by permutation importance for FT-Transformer"> -->
@@ -251,9 +264,9 @@
     <section id="decision">
       <h2><span>05</span>From Prediction to Decision</h2>
       <ul>
-        <li><b>Who would use it:</b> ICU clinicians, to prioritize monitoring of patients at high risk on their first day.</li>
-        <li><b>What decision changes:</b> In clinical settings, missing a high-risk patient (a false negative) is far more costly than an unnecessary alert (a false positive), so where the threshold is set matters as much as the model itself. Rather than reporting accuracy alone, I showed in numbers the trade-off between missed deaths and extra alerts, and set the threshold based on it.</li>
-        <li><b>Limitations and next steps:</b> The data cover 911 patients from an undisclosed source, so performance needs to be checked on data from other hospitals. Recall varied considerably across seeds (±0.18). Real-world use would require agreeing with clinicians on an acceptable alert level.</li>
+        <li><b>Who would use it:</b> ICU clinicians, to help prioritize monitoring of patients at high risk during the first 24 hours after ICU admission.</li>
+        <li><b>What decision changes:</b> Missing a patient at high risk of death (a false negative) may have more serious clinical consequences than generating an unnecessary alert (a false positive). Therefore, threshold selection matters alongside model performance. Rather than reporting accuracy alone, I quantified the trade-off between missed deaths and false alarms and selected a threshold based on this trade-off.</li>
+        <li><b>Limitations and next steps:</b> The dataset included 911 patients from an undisclosed source, so the models need to be evaluated on data from other hospitals to assess their generalizability. Recall varied substantially across random seeds (0.30–0.78), largely because the optimal threshold selected on the small validation set (128 patients) varied across runs. Before real-world deployment, clinicians would need to determine an acceptable balance between missed high-risk patients and unnecessary alerts.</li>
       </ul>
     </section>
 
