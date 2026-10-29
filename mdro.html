@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- 프로젝트마다 바꾸기: 브라우저 탭에 보이는 제목 -->
+  <title>Monitoring MDRO Patterns through Time-Based Analysis with SQL and Tableau | Hyeonji Kim</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    /* =========================================================
+       색상·글꼴: 메인 페이지(index.html)와 같은 값
+       여기 값만 바꾸면 이 페이지 전체에 반영돼요
+       ========================================================= */
+    :root {
+      --fg: #343434;      /* 기본 글자 */
+      --muted: #8695a4;   /* 날짜, 캡션 같은 보조 글자 */
+      --band: #eef4f1;    /* 연한 민트 배경 */
+      --pill: #00525e;    /* 딥 틸: 제목, 강조 */
+      --link: #3b5c5d;    /* 링크, 섹션 소제목 */
+      --line: #d2e8e3;    /* 구분선 */
+      --mint: #e1ece8;    /* 배지 배경 */
+      --hover: #f0674a;   /* 마우스 올렸을 때 */
+      --bg: #ffffff;
+      --font: "Pretendard", system-ui, -apple-system, sans-serif;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.7; }
+    a { color: var(--link); }
+    a:hover { color: var(--hover); }
+    a:focus-visible { outline: 2px solid var(--pill); outline-offset: 3px; border-radius: 3px; }
+    .wrap { max-width: 1000px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+    /* ---------- 상단 메뉴 (메인과 동일) ---------- */
+    header .wrap { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 28px; max-width: 1440px; }
+    header nav { display: flex; align-items: center; gap: 32px; }
+    header a { color: var(--fg); text-decoration: none; font-weight: 700; font-size: 20px; display: inline-flex; align-items: center; }
+    header a:hover { color: var(--hover); }
+    header svg { width: 24px; height: 24px; fill: currentColor; stroke: var(--bg); stroke-width: 1.6; stroke-linejoin: round; }
+    header .home { font-size: 18px; }
+
+    /* ---------- 제목 영역 ---------- */
+    .title .wrap { padding-block: 32px 40px; }
+    .back { font-size: 15px; font-weight: 600; text-decoration: none; color: var(--muted); }
+    .title h1 { margin: 14px 0 10px; font-size: 40px; line-height: 1.3; font-weight: 700; color: var(--pill); text-wrap: balance; }
+    .summary { margin: 0 0 22px; font-size: 18px; max-width: 64ch; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 18px; font-size: 15px; color: var(--muted); }
+    .meta b { color: var(--fg); font-weight: 600; margin-right: 6px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .badge { font-size: 14px; font-weight: 500; padding: 2px 12px; border-radius: 999px; background: var(--mint); color: var(--pill); }
+    .badge.method { background: transparent; border: 1px solid #aad5cb; }
+
+    /* ---------- 본문: 왼쪽 목차 + 오른쪽 내용 ---------- */
+    .doc { border-top: 1px solid var(--line); }
+    .doc .wrap { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 56px; padding-block: 40px 80px; align-items: start; }
+    .toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); }
+    .toc p { margin: 0 0 10px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 2px solid var(--line); }
+    .toc a { display: block; padding: 5px 0 5px 14px; margin-left: -2px; border-left: 2px solid transparent; color: var(--fg); text-decoration: none; font-size: 15px; }
+    .toc a:hover { color: var(--hover); }
+    .toc a.on { border-left-color: var(--pill); color: var(--pill); font-weight: 600; }
+
+    main section { padding-bottom: 48px; scroll-margin-top: 24px; }
+    main section + section { padding-top: 40px; border-top: 1px solid var(--line); }
+    main h2 { margin: 0 0 16px; font-size: 24px; font-weight: 700; color: var(--link); }
+    main h2 span { color: var(--muted); font-weight: 500; margin-right: 8px; }
+    main p, main li { max-width: 68ch; }
+    main p { margin: 0 0 14px; }
+    main ul { margin: 0 0 14px; padding-left: 20px; }
+    main li { margin-bottom: 6px; }
+    main li::marker { color: var(--pill); }
+    main b { font-weight: 600; }
+
+    /* 그림 자리 */
+    figure { margin: 0 0 14px; }
+    .fig { aspect-ratio: 16 / 9; width: 100%; background: var(--band); border: 1px dashed #aad5cb; border-radius: 6px; display: grid; place-items: center; color: var(--muted); font-size: 15px; text-align: center; padding: 16px; }
+    figure img { display: block; width: 100%; border-radius: 6px; }
+    figcaption { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+    /* 결과 표 */
+    .table-scroll { overflow-x: auto; margin-bottom: 14px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: tabular-nums; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { font-size: 13px; font-weight: 600; letter-spacing: .03em; color: var(--muted); background: var(--band); }
+    tr.best td { color: var(--pill); font-weight: 700; }
+
+    /* 핵심 수치 */
+    .numbers { display: flex; flex-wrap: wrap; gap: 12px 40px; margin: 4px 0 20px; }
+    .numbers div { display: grid; }
+    .numbers strong { font-size: 30px; font-weight: 700; color: var(--pill); line-height: 1.2; font-variant-numeric: tabular-nums; }
+    .numbers span { font-size: 14px; color: var(--muted); }
+
+    /* 링크 버튼 */
+    .links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .links a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid #aad5cb; border-radius: 4px; text-decoration: none; font-weight: 600; color: var(--pill); }
+    .links a:hover { border-color: var(--hover); color: var(--hover); }
+
+    .guide { color: var(--muted); font-size: 14px; }  /* 작성 안내 문구: 내용을 채우면 지우세요 */
+
+    footer .wrap { padding-block: 32px 40px; text-align: center; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+
+    @media (max-width: 760px) {
+      header .wrap { gap: 16px; }
+      header nav { gap: 20px; }
+      .title h1 { font-size: 30px; }
+      .doc .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-top: 24px; }
+      .toc { position: static; }
+      .toc ol { grid-auto-flow: row; }
+    }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  </style>
+</head>
+<body>
+
+<!-- ================= 상단 메뉴 ================= -->
+<header><div class="wrap">
+  <a class="home" href="index.html">Hyeonji Kim</a>
+  <nav>
+    <a href="mailto:your.email@example.com" aria-label="Email" title="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v16H2z M3.5 5.5 12 12l8.5-6.5"/></svg>
+    </a>
+    <a href="files/CV.pdf" target="_blank" rel="noopener" title="CV">CV</a>
+    <a href="https://www.linkedin.com/in/your-id/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">in</a>
+  </nav>
+</div></header>
+
+<!-- ================= 제목 영역 ================= -->
+<section class="title"><div class="wrap">
+  <a class="back" href="index.html">← All projects</a>
+  <h1>Monitoring MDRO Patterns through Time-Based Analysis with SQL and Tableau</h1>
+  <p class="summary">Aggregated hospital microbiology test results under international surveillance rules and built a Tableau dashboard that lets the infection control team see multidrug-resistant organism (MDRO) activity on a single screen.</p>
+
+  <div class="meta">
+    <span><b>Date</b>Jun–Aug 2025</span>
+    <span><b>Type</b>Bootcamp team project (5 members)</span>
+    <span><b>Role</b>Data extraction and transformation, statistics dashboard</span>
+  </div>
+
+  <!-- 사용 도구 (민트 배경) -->
+  <div class="badges">
+    <span class="badge">SQL</span>
+    <span class="badge">Tableau</span>
+  </div>
+  <!-- 사용 방법·모델 (테두리만) -->
+  <div class="badges">
+    <span class="badge method">WHO GLASS deduplication</span>
+    <span class="badge method">Segment analysis</span>
+    <span class="badge method">Time-series trend analysis</span>
+  </div>
+</div></section>
+
+<!-- ================= 본문 ================= -->
+<div class="doc"><div class="wrap">
+
+  <!-- 왼쪽 목차 -->
+  <nav class="toc" aria-label="Sections">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#figure">Figure</a></li>
+      <li><a href="#goal">Goal</a></li>
+      <li><a href="#method">Methodology &amp; Summary</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#decision">From Analysis to Decision</a></li>
+      <li><a href="#code">Code</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 1. Figure -->
+    <section id="figure">
+      <h2><span>01</span>Figure</h2>
+      <figure>
+        <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/mdro-dashboard.png" alt="MDRO monitoring dashboard rebuilt with synthetic data"> -->
+        <div class="fig">Dashboard screenshot (rebuilt with synthetic data)</div>
+        <figcaption>MDRO monitoring dashboard for the infection control team. Rebuilt with synthetic data; the original hospital data is confidential.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 2. Goal -->
+    <section id="goal">
+      <h2><span>02</span>Goal</h2>
+      <p>Antimicrobial-resistant infections raise mortality, length of stay and medical costs, so hospitals must continuously monitor and report them.
+        Using microbiology culture results from a university hospital, this project set out to:</p>
+      <ul>
+        <li>Count MDRO cases in line with the WHO GLASS standard by removing repeat tests of the same patient.</li>
+        <li>Separate infections acquired in the hospital from those brought in from outside.</li>
+        <li>Build a dashboard where the infection control team can filter by organism, specimen and period and see the current situation right away.</li>
+      </ul>
+    </section>
+
+    <!-- 3. Methodology & Summary -->
+    <section id="method">
+      <h2><span>03</span>Methodology &amp; Summary</h2>
+      <ul>
+        <li><b>Team scope:</b> The team built an infection response platform with four parts: automatic structuring of lab reports (NLP), an infection alert system (time-series forecasting), an infection control chatbot, and a statistics dashboard. I was responsible for the statistics dashboard.</li>
+        <li><b>Data:</b> Microbiology culture results from a university hospital. I used a table that teammates structured from free-text lab reports with NLP (patient ID, organism, specimen, antibiotic, susceptibility result, test date, admission date).</li>
+        <li><b>Deduplication:</b> Wrote a SQL query with window functions that keeps only the first test per patient, organism and specimen within one year, following WHO GLASS rules.</li>
+        <li><b>Trend preparation:</b> Filled months with no detections with zero so that monthly trends stay continuous.</li>
+        <li><b>Metrics:</b>
+          <ul>
+            <li><b>Detections before vs. after 48 hours of admission:</b> separates hospital-acquired from community-onset infections.</li>
+            <li><b>MDRO isolation rate:</b> the share of MDROs among all isolates.</li>
+            <li><b>Detections in blood vs. non-blood specimens:</b> monitors high-risk bloodstream infections separately.</li>
+            <li><b>Antibiotic resistance rates:</b> indicators reported to the national surveillance system (KOR-GLASS).</li>
+          </ul>
+        </li>
+        <li><b>Dashboard:</b> Three tabs (Monitoring, Ward Status, Statistics) with organism, specimen and year filters and KPI cards. Ward-level data were not available, so the ward view was built with simulated data.</li>
+      </ul>
+    </section>
+
+    <!-- 4. Results -->
+    <section id="results">
+      <h2><span>04</span>Results</h2>
+      <div class="numbers">
+        <div><strong>4</strong><span>Surveillance metrics</span></div>
+        <div><strong>3</strong><span>Dashboard tabs</span></div>
+        <div><strong>3</strong><span>Filters (organism, specimen, year)</span></div>
+      </div>
+      <ul>
+        <li><b>Detections after 48 hours of admission were higher every month.</b> In every month analyzed, more MDROs were detected after 48 hours of admission than before. This means hospital-acquired cases outweighed infections brought in from outside, which supports prioritizing control of transmission inside the hospital over screening at admission.</li>
+        <li><b>Counts were only reliable when a standard was followed.</b> Counting repeat tests of the same patient inflates the number of cases. Deduplicating under WHO GLASS rules produced numbers in a form that can be reported to the national surveillance system.</li>
+      </ul>
+    </section>
+
+    <!-- 5. From Analysis to Decision -->
+    <section id="decision">
+      <h2><span>05</span>From Analysis to Decision</h2>
+      <ul>
+        <li><b>Who uses it:</b> The hospital's infection control team and ward clinicians.</li>
+        <li><b>What changes:</b>
+          <ul>
+            <li>Filters and KPI cards show the day's situation without manual compilation.</li>
+            <li>The 48-hour indicator helps the team notice early when hospital-acquired cases begin to rise.</li>
+          </ul>
+        </li>
+        <li><b>Feedback:</b> An infection control practitioner commented that a dashboard organized by ward location "would make the situation clear at a glance and be a real help in daily work."</li>
+        <li><b>Limitations and next steps:</b>
+          <ul>
+            <li>Ward-level data were not available, so the ward view was built with simulated data.</li>
+            <li>The data pipeline is not automated, and no usability test with clinicians was conducted.</li>
+            <li>Next steps are connecting real ward data, automating the pipeline and evaluating usability with clinicians.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 6. Code -->
+    <section id="code">
+      <h2><span>06</span>Code</h2>
+      <p>The SQL queries and dashboard design are in the GitHub README. The original data is not included for confidentiality reasons.</p>
+      <div class="links">
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub repository ↗</a>
+      </div>
+    </section>
+  </main>
+</div></div>
+</div></div>
+
+<footer><div class="wrap">Copyright ©2026 Hyeonji Kim. All rights reserved.</div></footer>
+
+<script>
+  // 스크롤 위치에 맞춰 왼쪽 목차의 현재 섹션을 표시해요
+  (function () {
+    var links = document.querySelectorAll('.toc a');
+    var sections = Array.prototype.map.call(links, function (a) { return document.querySelector(a.getAttribute('href')); });
+    function update() {
+      var current = 0;
+      sections.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < window.innerHeight * 0.35) current = i; });
+      links.forEach(function (a, i) { a.classList.toggle('on', i === current); });
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+</body>
+</html>
