@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- 프로젝트마다 바꾸기: 브라우저 탭에 보이는 제목 -->
+  <title>Examining Pop-Up Revenue Drivers through Regression and ANOVA in Python | Hyeonji Kim</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    /* =========================================================
+       색상·글꼴: 메인 페이지(index.html)와 같은 값
+       여기 값만 바꾸면 이 페이지 전체에 반영돼요
+       ========================================================= */
+    :root {
+      --fg: #343434;      /* 기본 글자 */
+      --muted: #8695a4;   /* 날짜, 캡션 같은 보조 글자 */
+      --band: #eef4f1;    /* 연한 민트 배경 */
+      --pill: #00525e;    /* 딥 틸: 제목, 강조 */
+      --link: #3b5c5d;    /* 링크, 섹션 소제목 */
+      --line: #d2e8e3;    /* 구분선 */
+      --mint: #e1ece8;    /* 배지 배경 */
+      --hover: #f0674a;   /* 마우스 올렸을 때 */
+      --bg: #ffffff;
+      --font: "Pretendard", system-ui, -apple-system, sans-serif;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.7; }
+    a { color: var(--link); }
+    a:hover { color: var(--hover); }
+    a:focus-visible { outline: 2px solid var(--pill); outline-offset: 3px; border-radius: 3px; }
+    .wrap { max-width: 1000px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+    /* ---------- 상단 메뉴 (메인과 동일) ---------- */
+    header .wrap { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 28px; max-width: 1440px; }
+    header nav { display: flex; align-items: center; gap: 32px; }
+    header a { color: var(--fg); text-decoration: none; font-weight: 700; font-size: 20px; display: inline-flex; align-items: center; }
+    header a:hover { color: var(--hover); }
+    header svg { width: 24px; height: 24px; fill: currentColor; stroke: var(--bg); stroke-width: 1.6; stroke-linejoin: round; }
+    header .home { font-size: 18px; }
+
+    /* ---------- 제목 영역 ---------- */
+    .title .wrap { padding-block: 32px 40px; }
+    .back { font-size: 15px; font-weight: 600; text-decoration: none; color: var(--muted); }
+    .title h1 { margin: 14px 0 10px; font-size: 40px; line-height: 1.3; font-weight: 700; color: var(--pill); text-wrap: balance; }
+    .summary { margin: 0 0 22px; font-size: 18px; max-width: 64ch; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 18px; font-size: 15px; color: var(--muted); }
+    .meta b { color: var(--fg); font-weight: 600; margin-right: 6px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .badge { font-size: 14px; font-weight: 500; padding: 2px 12px; border-radius: 999px; background: var(--mint); color: var(--pill); }
+    .badge.method { background: transparent; border: 1px solid #aad5cb; }
+
+    /* ---------- 본문: 왼쪽 목차 + 오른쪽 내용 ---------- */
+    .doc { border-top: 1px solid var(--line); }
+    .doc .wrap { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 56px; padding-block: 40px 80px; align-items: start; }
+    .toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); }
+    .toc p { margin: 0 0 10px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 2px solid var(--line); }
+    .toc a { display: block; padding: 5px 0 5px 14px; margin-left: -2px; border-left: 2px solid transparent; color: var(--fg); text-decoration: none; font-size: 15px; }
+    .toc a:hover { color: var(--hover); }
+    .toc a.on { border-left-color: var(--pill); color: var(--pill); font-weight: 600; }
+
+    main section { padding-bottom: 48px; scroll-margin-top: 24px; }
+    main section + section { padding-top: 40px; border-top: 1px solid var(--line); }
+    main h2 { margin: 0 0 16px; font-size: 24px; font-weight: 700; color: var(--link); }
+    main h2 span { color: var(--muted); font-weight: 500; margin-right: 8px; }
+    main p, main li { max-width: 68ch; }
+    main p { margin: 0 0 14px; }
+    main ul { margin: 0 0 14px; padding-left: 20px; }
+    main li { margin-bottom: 6px; }
+    main li::marker { color: var(--pill); }
+    main b { font-weight: 600; }
+
+    /* 그림 자리 */
+    figure { margin: 0 0 14px; }
+    .fig { aspect-ratio: 16 / 9; width: 100%; background: var(--band); border: 1px dashed #aad5cb; border-radius: 6px; display: grid; place-items: center; color: var(--muted); font-size: 15px; text-align: center; padding: 16px; }
+    figure img { display: block; width: 100%; border-radius: 6px; }
+    figcaption { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+    /* 결과 표 */
+    .table-scroll { overflow-x: auto; margin-bottom: 14px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: tabular-nums; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { font-size: 13px; font-weight: 600; letter-spacing: .03em; color: var(--muted); background: var(--band); }
+    tr.best td { color: var(--pill); font-weight: 700; }
+
+    /* 핵심 수치 */
+    .numbers { display: flex; flex-wrap: wrap; gap: 12px 40px; margin: 4px 0 20px; }
+    .numbers div { display: grid; }
+    .numbers strong { font-size: 30px; font-weight: 700; color: var(--pill); line-height: 1.2; font-variant-numeric: tabular-nums; }
+    .numbers span { font-size: 14px; color: var(--muted); }
+
+    /* 링크 버튼 */
+    .links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .links a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid #aad5cb; border-radius: 4px; text-decoration: none; font-weight: 600; color: var(--pill); }
+    .links a:hover { border-color: var(--hover); color: var(--hover); }
+
+    .guide { color: var(--muted); font-size: 14px; }  /* 작성 안내 문구: 내용을 채우면 지우세요 */
+
+    footer .wrap { padding-block: 32px 40px; text-align: center; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+
+    @media (max-width: 760px) {
+      header .wrap { gap: 16px; }
+      header nav { gap: 20px; }
+      .title h1 { font-size: 30px; }
+      .doc .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-top: 24px; }
+      .toc { position: static; }
+      .toc ol { grid-auto-flow: row; }
+    }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  </style>
+</head>
+<body>
+
+<!-- ================= 상단 메뉴 ================= -->
+<header><div class="wrap">
+  <a class="home" href="index.html">Hyeonji Kim</a>
+  <nav>
+    <a href="mailto:your.email@example.com" aria-label="Email" title="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v16H2z M3.5 5.5 12 12l8.5-6.5"/></svg>
+    </a>
+    <a href="files/CV.pdf" target="_blank" rel="noopener" title="CV">CV</a>
+    <a href="https://www.linkedin.com/in/your-id/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">in</a>
+  </nav>
+</div></header>
+
+<!-- ================= 제목 영역 ================= -->
+<section class="title"><div class="wrap">
+  <a class="back" href="index.html">← All projects</a>
+  <h1>Examining Pop-Up Revenue Drivers through Regression and ANOVA in Python</h1>
+  <p class="summary">Tested whether high-traffic locations really bring in more revenue for beauty pop-up stores, and found that revenue depended on product price rather than on location or foot traffic.</p>
+
+  <div class="meta">
+    <span><b>Date</b>Jun 2026</span>
+    <span><b>Type</b>Personal project</span>
+    <span><b>Role</b>Data cleaning, statistical analysis, dashboard</span>
+  </div>
+
+  <!-- 사용 도구 (민트 배경) -->
+  <div class="badges">
+    <span class="badge">Python</span>
+    <span class="badge">pandas</span>
+    <span class="badge">SciPy</span>
+    <span class="badge">statsmodels</span>
+    <span class="badge">Tableau</span>
+  </div>
+  <!-- 사용 방법·모델 (테두리만) -->
+  <div class="badges">
+    <span class="badge method">Correlation</span>
+    <span class="badge method">ANOVA</span>
+    <span class="badge method">Multiple regression</span>
+    <span class="badge method">Confidence intervals</span>
+  </div>
+</div></section>
+
+<!-- ================= 본문 ================= -->
+<div class="doc"><div class="wrap">
+
+  <!-- 왼쪽 목차 -->
+  <nav class="toc" aria-label="Sections">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#figure">Figure</a></li>
+      <li><a href="#goal">Goal</a></li>
+      <li><a href="#method">Methodology &amp; Summary</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#decision">From Analysis to Decision</a></li>
+      <li><a href="#code">Code</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 1. Figure -->
+    <section id="figure">
+      <h2><span>01</span>Figure</h2>
+      <figure>
+        <img src="images/popup-location.png" alt="Average daily footfall, average revenue and revenue per visitor by location type">
+        <figcaption>Locations differed greatly in foot traffic but not in revenue, so the gap in revenue per visitor (RPV) came from foot traffic alone.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 2. Goal -->
+    <section id="goal">
+      <h2><span>02</span>Goal</h2>
+      <p>As K-beauty brands open more pop-up stores, choosing where to open them has become a key decision, and busy locations usually come with higher rent.
+        Using <b>2,133 pop-up events</b> from a public dataset, this project asked:</p>
+      <ul>
+        <li>Do locations with more foot traffic actually bring in more revenue, or more revenue per visitor?</li>
+        <li>Does the type of event (for example, a flash event or a mall kiosk) change sales results?</li>
+        <li>Once other factors are held constant, what actually drives revenue?</li>
+      </ul>
+    </section>
+
+    <!-- 3. Methodology & Summary -->
+    <section id="method">
+      <h2><span>03</span>Methodology &amp; Summary</h2>
+      <ul>
+        <li><b>Data:</b> Kaggle "Luxury Beauty Cosmetics Pop-up Events KPI 2025" (2,133 events, 15 variables), including location type, event type, brand, product price, average daily footfall, units sold, revenue and sell-through rate (the share of stock that was sold).</li>
+        <li><b>Preprocessing:</b> Filled 36 missing end dates using the lease length, grouped product names into categories with regular expressions, and grouped start months into seasons.</li>
+        <li><b>New measure:</b> RPV (revenue per visitor) = revenue ÷ average daily footfall, to compare how efficiently each location turned traffic into sales.</li>
+        <li><b>Analysis steps:</b>
+          <ul>
+            <li><b>Correlation:</b> Do footfall and revenue move together?</li>
+            <li><b>One-way ANOVA:</b> Do average footfall, revenue and sell-through really differ across location types and event types, or could the gaps be due to chance?</li>
+            <li><b>Two-way ANOVA:</b> Do some location and event type combinations perform better than the two effects would predict on their own?</li>
+            <li><b>Multiple regression:</b> Holding brand, season, region and other factors constant, which variables explain revenue?</li>
+            <li><b>95% confidence intervals:</b> Is the top-ranked combination clearly ahead, or do its intervals overlap with others?</li>
+          </ul>
+        </li>
+        <li><b>Visualization:</b> A Tableau Public dashboard with three tabs (Overview, Brand, Efficiency).</li>
+      </ul>
+    </section>
+
+    <!-- 4. Results -->
+    <section id="results">
+      <h2><span>04</span>Results</h2>
+      <div class="numbers">
+        <div><strong>r = −0.02</strong><span>Footfall vs. revenue</span></div>
+        <div><strong>R² = 0.53</strong><span>Revenue explained by price alone</span></div>
+        <div><strong>2.04×</strong><span>Footfall needed for similar revenue</span></div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Question</th><th>Test</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>Does revenue rise with footfall?</td><td>Correlation</td><td>r = −0.024 (no relationship)</td></tr>
+            <tr><td>Does footfall differ by location?</td><td>One-way ANOVA</td><td>p &lt; 0.001 (yes)</td></tr>
+            <tr><td>Does revenue differ by location?</td><td>One-way ANOVA</td><td>p = 0.142 (no)</td></tr>
+            <tr><td>Does sell-through differ by event type?</td><td>One-way ANOVA</td><td>p &lt; 0.001 (yes)</td></tr>
+            <tr><td>Does revenue differ by event type?</td><td>One-way ANOVA</td><td>p = 0.247 (no)</td></tr>
+            <tr><td>Do location × event combinations matter?</td><td>Two-way ANOVA</td><td>p = 0.189 (no)</td></tr>
+            <tr><td>How much of revenue does price explain?</td><td>Multiple regression</td><td>R² 0.527 → 0.536 (+8 variables)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="guide">p &lt; 0.05 means a difference this large is unlikely to be due to chance.</p>
+      <ul>
+        <li><b>High traffic did not mean high revenue.</b> Footfall and revenue were unrelated (r = −0.02). Footfall differed sharply by location (p &lt; 0.001), but revenue did not (p = 0.14). High-Street locations drew 2.04 times the daily footfall of Art/Design District locations (1,880 vs. 920), yet earned about 10% less on average ($187,232 vs. $208,104). Art/Design District ranked first in RPV (247 vs. 111 for High-Street) simply because it reached similar revenue with the fewest visitors.</li>
+        <li><b>Revenue was driven by product price, not location.</b> Price alone explained 53% of the variation in revenue (R² = 0.527). Adding location, event type, brand, season and four other variables raised this only to 54% (R² = 0.536), and none of them was statistically significant; footfall came closest (p = 0.051), and its effect was slightly negative. Average units sold differed little (1,840 to 2,038 across event types), so revenue gaps came mostly from what was sold, not where.</li>
+        <li><b>Event type changed sell-through, not revenue.</b> Mobile pop-up trucks (75.9%) and flash events (75.3%) sold more of their stock than mall kiosks and shop-in-shops (71.2% each; p &lt; 0.001). Flash events beat mall kiosks by 4.1 percentage points. Revenue, however, did not differ by event type (p = 0.247).</li>
+        <li><b>The "best combination" ranking was not reliable.</b> The interaction between location and event type was not significant (p = 0.189). The top combination (Art/Design District × Standalone Pop-Up) had a 95% confidence interval that overlapped with seven other combinations, so its first place may be due to chance.</li>
+      </ul>
+      <figure>
+        <img src="images/popup-event-type.png" alt="Mean sell-through and revenue by event type with 95% confidence intervals">
+        <figcaption>Event type made a clear difference in sell-through (left) but not in revenue (right). Dots show means and lines show 95% confidence intervals.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/popup-combo-rpv.png" alt="Mean RPV with 95% confidence intervals for 25 location and event type combinations">
+        <figcaption>Mean RPV for all 25 location × event type combinations. The top combination's interval overlaps with seven others.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 5. From Analysis to Decision -->
+    <section id="decision">
+      <h2><span>05</span>From Analysis to Decision</h2>
+      <ul>
+        <li><b>Who would use it:</b> Brand marketing teams planning where and how to run pop-up stores.</li>
+        <li><b>What decisions change:</b>
+          <ul>
+            <li><b>Choose locations by cost efficiency, not traffic.</b> Since revenue did not differ by location, lower-rent locations deserve consideration before busy, high-rent ones.</li>
+            <li><b>Reach revenue targets through the product mix.</b> Planning the share of higher-priced products, such as perfumes and serums, matters more than negotiating for a prime location.</li>
+            <li><b>Pick the event type based on inventory goals.</b> When the aim is to sell out limited stock, flash events and mobile pop-up trucks are the better choice.</li>
+          </ul>
+        </li>
+        <li><b>Limitations and next steps:</b>
+          <ul>
+            <li>Revenue is calculated as price × units sold, so a strong link between price and revenue is partly built into the data.</li>
+            <li>No variable in the data explained units sold, and variables other than price explained almost nothing, which suggests the data may be synthetic.</li>
+            <li>Rent and advertising costs were not available, so return on investment by location could not be calculated directly.</li>
+            <li>Next steps: combine cost data to compare return on investment by location, and test whether changing the event type actually raises sell-through.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 6. Code -->
+    <section id="code">
+      <h2><span>06</span>Code</h2>
+      <p>The full analysis, code and figures are in the GitHub README.</p>
+      <div class="links">
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub repository ↗</a>
+        <a href="#" target="_blank" rel="noopener">Tableau dashboard ↗</a>
+      </div>
+    </section>
+  </main>
+</div></div>
+</div></div>
+
+<footer><div class="wrap">Copyright ©2026 Hyeonji Kim. All rights reserved.</div></footer>
+
+<script>
+  // 스크롤 위치에 맞춰 왼쪽 목차의 현재 섹션을 표시해요
+  (function () {
+    var links = document.querySelectorAll('.toc a');
+    var sections = Array.prototype.map.call(links, function (a) { return document.querySelector(a.getAttribute('href')); });
+    function update() {
+      var current = 0;
+      sections.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < window.innerHeight * 0.35) current = i; });
+      links.forEach(function (a, i) { a.classList.toggle('on', i === current); });
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+</body>
+</html>
