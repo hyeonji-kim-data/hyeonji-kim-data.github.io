@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     /* 시안 그대로 재현한 버전 */
     :root {
@@ -52,7 +53,8 @@
     .works .wrap { padding-block: 24px 40px; }
     .works .head { margin-bottom: 0; }
     .work { display: grid; grid-template-columns: 246px minmax(0, 1fr); gap: 20px; padding-block: 32px; border-bottom: 1px solid var(--line); }
-    a.thumb { display: block; }
+    .thumb { display: block; aspect-ratio: 246 / 180; border-radius: 6px; max-width: 100%; overflow: hidden; background: #fff; }
+    .thumb img { display: block; width: 100%; height: 100%; object-fit: contain; }
     .work h3 a { text-decoration: none; }
     .work h3 a:hover { color: #f0674a; }
     .work h3 { margin: 0; font-size: 30px; line-height: 1.3; font-weight: 700; color: var(--pill); }
@@ -118,23 +120,25 @@
 <section class="works"><div class="wrap">
   <div class="head"><h2>Projects</h2></div>
 
-<article class="work">
-  <a class="thumb" href="mdro.html" aria-label="Monitoring MDRO Patterns">
-    <img src="images/mdro-dashboard.png" alt="">
-  </a>
-  <div>
-    <h3><a href="mdro.html">Monitoring MDRO Patterns through Time-Based Analysis with SQL and Tableau</a></h3>
-    <div class="meta2"><span class="pill">2025</span><span class="cat">SQL · Tableau</span></div>
-    <p>Built a Tableau dashboard that tracks how multidrug-resistant organism cases change over time, using SQL to prepare the data.</p>
-  </div>
-</article>
-  
   <article class="work">
-    <div class="thumb" style="background:#fbc4a5"></div>
+    <a class="thumb" href="popup.html" aria-label="Examining Pop-Up Revenue Drivers">
+      <img src="images/popup-location.png" alt="">
+    </a>
     <div>
-      <h3>Vibrant Portraits of 2020</h3>
-      <div class="meta2"><span class="pill">2018</span><span class="cat">Illustration</span></div>
-      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+      <h3><a href="popup.html">Examining Pop-Up Revenue Drivers through Regression and ANOVA in Python</a></h3>
+      <div class="meta2"><span class="pill">2026</span><span class="cat">Statistical Analysis</span></div>
+      <p>Tested whether visitor counts, unit prices and event types explain pop-up store revenue across 2,133 events. Visitors were almost unrelated to revenue, while unit price alone explained 53% of it.</p>
+    </div>
+  </article>
+
+  <article class="work">
+    <a class="thumb" href="mdro.html" aria-label="Monitoring MDRO Patterns">
+      <img src="images/mdro-dashboard.png" alt="">
+    </a>
+    <div>
+      <h3><a href="mdro.html">Monitoring MDRO Patterns through Time-Based Analysis with SQL and Tableau</a></h3>
+      <div class="meta2"><span class="pill">2025</span><span class="cat">SQL · Tableau</span></div>
+      <p>Built a Tableau dashboard that tracks how multidrug-resistant organism cases change over time, using SQL to prepare the data.</p>
     </div>
   </article>
 
@@ -146,6 +150,7 @@
       <p>Built a model to flag ICU sepsis patients at high risk of death early, using clinical data from the first hours of their stay.</p>
     </div>
   </article>
+</div></section>
 
 <footer><div class="wrap">
   <small>Copyright © 2026 Hyeonji Kim</small>
