@@ -171,7 +171,7 @@
       <h2><span>01</span>Figure</h2>
       <figure>
         <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/mdro-dashboard.png" alt="MDRO monitoring dashboard rebuilt with synthetic data"> -->
-        <img src="images/mdro-dashboard.png" alt="Tableau dashboard tracking MDRO cases over time">
+        <div class="fig">Dashboard screenshot (rebuilt with synthetic data)</div>
         <figcaption>MDRO monitoring dashboard for the infection control team. Rebuilt with synthetic data; the original hospital data is confidential.</figcaption>
       </figure>
     </section>
@@ -192,33 +192,30 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Team scope:</b> The team built an infection response platform with four parts: automatic structuring of lab reports (NLP), an infection alert system (time-series forecasting), an infection control chatbot, and a statistics dashboard. I was responsible for the statistics dashboard.</li>
-        <li><b>Data:</b> Microbiology culture results from a university hospital. I used a table that teammates structured from free-text lab reports with NLP (patient ID, organism, specimen, antibiotic, susceptibility result, test date, admission date).</li>
-        <li><b>Deduplication:</b> Wrote a SQL query with window functions that keeps only the first test per patient, organism and specimen within one year, following WHO GLASS rules.</li>
-        <li><b>Trend preparation:</b> Filled months with no detections with zero so that monthly trends stay continuous.</li>
-        <li><b>Metrics:</b>
-          <ul>
-            <li><b>Detections before vs. after 48 hours of admission:</b> separates hospital-acquired from community-onset infections.</li>
-            <li><b>MDRO isolation rate:</b> the share of MDROs among all isolates.</li>
-            <li><b>Detections in blood vs. non-blood specimens:</b> monitors high-risk bloodstream infections separately.</li>
-            <li><b>Antibiotic resistance rates:</b> indicators reported to the national surveillance system (KOR-GLASS).</li>
-          </ul>
-        </li>
-        <li><b>Dashboard:</b> Three tabs (Monitoring, Ward Status, Statistics) with organism, specimen and year filters and KPI cards. Ward-level data were not available, so the ward view was built with simulated data.</li>
+        <li><b>Team scope:</b> The team built an infection response platform (lab report structuring, alert system, chatbot and dashboard). I built the statistics dashboard.</li>
+        <li><b>Data:</b> Microbiology culture results from a university hospital, structured from free-text lab reports by teammates.</li>
+        <li><b>Deduplication:</b> A SQL query with window functions keeps only the first test per patient, organism and specimen within one year, following WHO GLASS rules.</li>
+        <li><b>Dashboard:</b> Three Tableau tabs (Monitoring, Ward Status, Statistics) with filters and KPI cards, built around four surveillance metrics.</li>
       </ul>
     </section>
 
     <!-- 4. Results -->
     <section id="results">
       <h2><span>04</span>Results</h2>
-      <div class="numbers">
-        <div><strong>4</strong><span>Surveillance metrics</span></div>
-        <div><strong>3</strong><span>Dashboard tabs</span></div>
-        <div><strong>3</strong><span>Filters (organism, specimen, year)</span></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Metric</th><th>What it shows</th></tr></thead>
+          <tbody>
+            <tr><td>Detections before vs. after 48 h of admission</td><td>Hospital-acquired vs. community-onset cases</td></tr>
+            <tr><td>MDRO isolation rate</td><td>Share of MDROs among all isolates</td></tr>
+            <tr><td>Blood vs. non-blood specimens</td><td>High-risk bloodstream infections</td></tr>
+            <tr><td>Antibiotic resistance rates</td><td>Indicators for national reporting (KOR-GLASS)</td></tr>
+          </tbody>
+        </table>
       </div>
       <ul>
-        <li><b>Detections after 48 hours of admission were higher every month.</b> In every month analyzed, more MDROs were detected after 48 hours of admission than before. This means hospital-acquired cases outweighed infections brought in from outside, which supports prioritizing control of transmission inside the hospital over screening at admission.</li>
-        <li><b>Counts were only reliable when a standard was followed.</b> Counting repeat tests of the same patient inflates the number of cases. Deduplicating under WHO GLASS rules produced numbers in a form that can be reported to the national surveillance system.</li>
+        <li><b>Most cases started inside the hospital.</b> In every month analyzed, more MDROs were detected after 48 hours of admission than before, pointing infection control toward transmission inside the hospital.</li>
+        <li><b>A standard made the counts trustworthy.</b> Counting repeat tests inflates cases; WHO GLASS deduplication produced numbers ready for national reporting.</li>
       </ul>
     </section>
 
@@ -226,21 +223,10 @@
     <section id="decision">
       <h2><span>05</span>From Analysis to Decision</h2>
       <ul>
-        <li><b>Who uses it:</b> The hospital's infection control team and ward clinicians.</li>
-        <li><b>What changes:</b>
-          <ul>
-            <li>Filters and KPI cards show the day's situation without manual compilation.</li>
-            <li>The 48-hour indicator helps the team notice early when hospital-acquired cases begin to rise.</li>
-          </ul>
-        </li>
-        <li><b>Feedback:</b> An infection control practitioner commented that a dashboard organized by ward location "would make the situation clear at a glance and be a real help in daily work."</li>
-        <li><b>Limitations and next steps:</b>
-          <ul>
-            <li>Ward-level data were not available, so the ward view was built with simulated data.</li>
-            <li>The data pipeline is not automated, and no usability test with clinicians was conducted.</li>
-            <li>Next steps are connecting real ward data, automating the pipeline and evaluating usability with clinicians.</li>
-          </ul>
-        </li>
+        <li><b>See the day's status at a glance.</b> Filters and KPI cards replace manual compilation for the infection control team.</li>
+        <li><b>Catch rising hospital-acquired cases early</b> through the 48-hour indicator.</li>
+        <li><b>Feedback:</b> An infection control practitioner said a ward-based dashboard "would make the situation clear at a glance."</li>
+        <li><b>Limitations:</b> ward data were simulated, the pipeline is not automated, and no usability test with clinicians was done.</li>
       </ul>
     </section>
 
