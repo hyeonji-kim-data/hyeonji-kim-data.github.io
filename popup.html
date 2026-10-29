@@ -128,12 +128,12 @@
 <section class="title"><div class="wrap">
   <a class="back" href="index.html">← All projects</a>
   <h1>Examining Pop-Up Revenue Drivers through Regression and ANOVA in Python</h1>
-  <p class="summary">Tested whether high-traffic locations really bring in more revenue for beauty pop-up stores, and found that revenue depended on product price rather than on location or foot traffic.</p>
+  <p class="summary">Tested whether high-traffic locations generated more revenue for beauty pop-up stores and found that revenue was more closely associated with product price than with location or foot traffic.</p>
 
   <div class="meta">
     <span><b>Date</b>Jun 2026</span>
     <span><b>Type</b>Personal project</span>
-    <span><b>Role</b>Data cleaning, statistical analysis, dashboard</span>
+    <span><b>Role</b>Data cleaning, statistical analysis</span>
   </div>
 
   <!-- 사용 도구 (민트 배경) -->
@@ -142,7 +142,6 @@
     <span class="badge">pandas</span>
     <span class="badge">SciPy</span>
     <span class="badge">statsmodels</span>
-    <span class="badge">Tableau</span>
   </div>
   <!-- 사용 방법·모델 (테두리만) -->
   <div class="badges">
@@ -175,19 +174,19 @@
       <h2><span>01</span>Figure</h2>
       <figure>
         <img src="images/popup-location.png" alt="Average daily footfall, average revenue and revenue per visitor by location type">
-        <figcaption>Locations differed greatly in foot traffic but not in revenue, so the gap in revenue per visitor (RPV) came from foot traffic alone.</figcaption>
+        <figcaption>Locations differed substantially in foot traffic but generated similar revenue, so differences in revenue per visitor (RPV) were driven by foot traffic alone.</figcaption>
       </figure>
     </section>
 
     <!-- 2. Goal -->
     <section id="goal">
       <h2><span>02</span>Goal</h2>
-      <p>As K-beauty brands open more pop-up stores, choosing where to open them has become a key decision, and busy locations usually come with higher rent.
-        Using <b>2,133 pop-up events</b> from a public dataset, this project asked:</p>
+      <p>As K-beauty pop-up stores become more common, choosing the right location has become increasingly important. Locations with higher foot traffic also tend to have higher rental costs.
+        This project asked:</p>
       <ul>
-        <li>Do locations with more foot traffic actually bring in more revenue, or more revenue per visitor?</li>
-        <li>Does the type of event (for example, a flash event or a mall kiosk) change sales results?</li>
-        <li>Once other factors are held constant, what actually drives revenue?</li>
+        <li>Do locations with higher foot traffic actually generate more revenue or higher revenue per visitor (RPV)?</li>
+        <li>Does the type of event (e.g., a flash event or a mall kiosk) affect sales performance?</li>
+        <li>After controlling for other factors, what actually drives revenue?</li>
       </ul>
     </section>
 
@@ -196,9 +195,8 @@
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
         <li><b>Data:</b> Kaggle "Luxury Beauty Cosmetics Pop-up Events KPI 2025" (2,133 events, 15 variables), cleaned and grouped by product category and season.</li>
-        <li><b>RPV (revenue per visitor):</b> revenue ÷ total footfall over the event, counting everyone who visited, not only buyers.</li>
-        <li><b>Tests:</b> correlation, one- and two-way ANOVA, multiple regression and 95% confidence intervals, each answering one question about location, event type or price.</li>
-        <li><b>Dashboard:</b> Tableau Public with three tabs (Overview, Brand, Efficiency).</li>
+        <li><b>RPV (revenue per visitor):</b> revenue ÷ total footfall during the event. It measures average revenue per visitor, including non-buyers, and helps compare revenue generation across locations.</li>
+        <li><b>Tests:</b> correlation, one- and two-way ANOVA, multiple regression, and 95% confidence intervals to answer distinct questions about location, event type, and price.</li>
       </ul>
     </section>
 
@@ -223,9 +221,9 @@
         </table>
       </div>
       <ul>
-        <li><b>Traffic did not bring revenue.</b> High-Street drew 2.04 times the footfall of Art/Design District but earned about 10% less, so its revenue per visitor was $3.63 against $9.92.</li>
-        <li><b>Price drove revenue.</b> Price alone explained 53% of revenue; location, event type, brand and five other variables added only one percentage point.</li>
-        <li><b>Event type changed sell-through, not revenue.</b> Flash events sold 4.1 percentage points more of their stock than mall kiosks, with no difference in revenue.</li>
+        <li><b>More foot traffic did not mean more revenue.</b> High-Street attracted 2.04 times as many visitors as Art/Design District but generated about 10% less revenue, resulting in revenue per visitor (RPV) of $3.63 vs. $9.92.</li>
+        <li><b>Price was the strongest predictor of revenue.</b> Price alone explained 53% of the differences in revenue. Adding location, event type, brand and five other variables raised this only to 54%.</li>
+        <li><b>Event type affected sell-through, but not revenue.</b> Flash events had a sell-through rate 4.1 percentage points higher than mall kiosks, with no statistically significant difference in revenue.</li>
       </ul>
       <figure>
         <img src="images/popup-event-type.png" alt="Mean sell-through and revenue by event type with 95% confidence intervals">
@@ -237,10 +235,10 @@
     <section id="decision">
       <h2><span>05</span>From Analysis to Decision</h2>
       <ul>
-        <li><b>Choose locations by cost, not traffic.</b> Revenue did not differ by location, so lower-rent sites deserve a look before busy ones.</li>
-        <li><b>Hit revenue targets through the product mix,</b> such as the share of perfumes and serums, rather than through a prime location.</li>
-        <li><b>Match the event type to inventory goals.</b> Flash events and mobile trucks suit selling out limited stock.</li>
-        <li><b>Limitations:</b> revenue is price × units, so price's role is partly built in; the data may be synthetic, and rent costs were not available.</li>
+        <li><b>Prioritize cost over foot traffic when choosing locations.</b> Revenue did not differ significantly across locations, so lower-rent sites may be worth considering before high-traffic ones.</li>
+        <li><b>Optimize product mix to meet revenue targets.</b> For example, adjust the share of higher-priced products, such as perfumes and serums, rather than relying on a prime location.</li>
+        <li><b>Match the event type to inventory goals.</b> Flash events and mobile trucks may be suitable for selling through limited stock quickly.</li>
+        <li><b>Limitations:</b> Because revenue is calculated as price × units sold, price's role is partly built into the outcome. The dataset may be synthetic, and rental cost data were unavailable.</li>
       </ul>
     </section>
 
@@ -250,7 +248,6 @@
       <p>The full analysis, code and figures are in the GitHub README.</p>
       <div class="links">
         <a href="https://github.com/" target="_blank" rel="noopener">GitHub repository ↗</a>
-        <a href="#" target="_blank" rel="noopener">Tableau dashboard ↗</a>
       </div>
     </section>
   </main>
