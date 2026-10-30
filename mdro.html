@@ -204,18 +204,17 @@
       <h2><span>04</span>Results</h2>
       <div class="table-scroll">
         <table>
-          <thead><tr><th>Metric</th><th>What it shows</th></tr></thead>
+          <thead><tr><th>Tab</th><th>Charts</th><th>Purpose</th></tr></thead>
           <tbody>
-            <tr><td>Detections before vs. after 48 h of admission</td><td>Hospital-acquired vs. community-onset cases</td></tr>
-            <tr><td>MDRO isolation rate</td><td>Share of MDROs among all isolates</td></tr>
-            <tr><td>Blood vs. non-blood specimens</td><td>High-risk bloodstream infections</td></tr>
-            <tr><td>Antibiotic resistance rates</td><td>Indicators for national reporting (KOR-GLASS)</td></tr>
+            <tr><td>Monitoring</td><td>Detections before vs. after 48 h of admission<br>Detections in blood vs. non-blood specimens<br>KPI cards: isolation rate by MDRO type, change from last month</td><td>Track hospital-acquired cases and high-risk bloodstream infections</td></tr>
+            <tr><td>Ward Status</td><td>Detections by ward<br>Isolation precaution counts by type<br>Ward floor plan with patient locations</td><td>Spot local outbreaks and plan isolation rooms</td></tr>
+            <tr><td>Statistics</td><td>Patients by sex and age group<br>Top 5 organisms by sex and by season<br>Antibiotic resistance rates by specimen and organism</td><td>Understand patient groups and guide antibiotic choice</td></tr>
           </tbody>
         </table>
       </div>
       <ul>
-        <li><b>Most cases started inside the hospital.</b> In every month analyzed, more MDROs were detected after 48 hours of admission than before, pointing infection control toward transmission inside the hospital.</li>
-        <li><b>A standard made the counts trustworthy.</b> Counting repeat tests inflates cases; WHO GLASS deduplication produced numbers ready for national reporting.</li>
+        <li><b>Most cases were detected more than 48 hours after admission.</b> In every month from January to June 2021, MDRO detections after 48 hours outnumbered those within the first 48 hours, highlighting the importance of monitoring potential hospital transmission.</li>
+        <li><b>Standardized deduplication made case counts more reliable.</b> Counting repeat tests can inflate case counts. Applying WHO-GLASS deduplication criteria produced more consistent counts for surveillance and reporting.</li>
       </ul>
     </section>
 
@@ -223,10 +222,9 @@
     <section id="decision">
       <h2><span>05</span>From Analysis to Decision</h2>
       <ul>
-        <li><b>See the day's status at a glance.</b> Filters and KPI cards replace manual compilation for the infection control team.</li>
-        <li><b>Catch rising hospital-acquired cases early</b> through the 48-hour indicator.</li>
-        <li><b>Feedback:</b> An infection control practitioner said a ward-based dashboard "would make the situation clear at a glance."</li>
-        <li><b>Limitations:</b> ward data were simulated, the pipeline is not automated, and no usability test with clinicians was done.</li>
+        <li><b>Spot increases by organism at a glance.</b> KPI cards display each MDRO type’s isolation rate and month-over-month change, helping the team quickly identify rising trends.</li>
+        <li><b>Monitor potential hospital-acquired cases.</b> The 48-hour indicator helps identify increases in MDRO detections occurring more than 48 hours after admission.</li>
+        <li><b>Limitations:</b> The dashboard was a prototype and was not deployed. Ward-level data were simulated, the data pipeline was not automated, and no usability testing was conducted with clinicians.</li>
       </ul>
     </section>
 
