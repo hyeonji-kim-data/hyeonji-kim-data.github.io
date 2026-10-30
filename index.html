@@ -198,4 +198,18 @@
 </div></footer>
 
 </body>
+<script>
+  // 이메일 아이콘을 누르면 주소를 복사하고, 메일 앱도 열려고 시도해요
+  document.querySelectorAll('.copy-email').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var email = a.dataset.email;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(email).then(function () {
+          a.title = 'Copied: ' + email;
+          alert('Email address copied: ' + email);
+        });
+      }
+    });
+  });
+</script>
 </html>
