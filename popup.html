@@ -108,6 +108,18 @@
       .toc ol { grid-auto-flow: row; }
     }
     @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  /* 이메일 아이콘: 클릭하면 아래에 "Copied!" 표시 */
+    .copy-email { position: relative; }
+    .copy-email::after {
+      content: "Copied!";
+      position: absolute; top: 100%; left: 50%;
+      transform: translate(-50%, 6px);
+      padding: 2px 8px; border-radius: 4px;
+      background: var(--pill); color: #fff;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .copy-email.copied::after { opacity: 1; }    
   </style>
 </head>
 <body>
@@ -116,10 +128,12 @@
 <header><div class="wrap">
   <a class="home" href="index.html">Hyeonji Kim</a>
   <nav>
-    <a href="mailto:your.email@example.com" aria-label="Email" title="Email">
+    <a href="mailto:hyeonji.kim.data@gmail.com" class="copy-email" data-email="hyeonji.kim.data@gmail.com" aria-label="Email" title="Email">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v16H2z M3.5 5.5 12 12l8.5-6.5"/></svg>
     </a>
-    <a href="files/CV.pdf" target="_blank" rel="noopener" title="CV">CV</a>
+    <a href="files/CV.pdf" target="_blank" rel="noopener" aria-label="Resume" title="Resume">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2h11l5 5v15H4z M15 2v5h5 M7.5 11.5h9 M7.5 15h9 M7.5 18.5h6"/></svg>
+    </a>
     <a href="https://www.linkedin.com/in/your-id/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">in</a>
   </nav>
 </div></header>
@@ -270,5 +284,17 @@
     update();
   })();
 </script>
+<script>
+  // 이메일 아이콘을 누르면 주소를 복사하고 "Copied!"를 잠깐 보여줘요
+  document.querySelectorAll('.copy-email').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(a.dataset.email).then(function () {
+        a.classList.add('copied');
+        setTimeout(function () { a.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+</script>  
 </body>
 </html>
