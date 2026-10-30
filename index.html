@@ -40,6 +40,10 @@
     .about .row:last-child { border-bottom: 0; }
     .about h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--pill); }
     .about p { margin: 0; line-height: 1.7; max-width: 70ch; }
+    .skill-list { margin: 0; display: grid; grid-template-rows: repeat(3, auto); grid-auto-flow: column; gap: 8px 40px; line-height: 1.7; }
+    .skill-list div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; }
+    .skill-list dt { font-weight: 600; }
+    .skill-list dd { margin: 0; }
     .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
     .head h2 { margin: 0; font-size: 22px; font-weight: 600; color: var(--link); }
     .head a { color: var(--link); text-decoration: none; }
@@ -76,6 +80,7 @@
       .cards, .work { grid-template-columns: 1fr; }
       .work h3 { font-size: 20px; }
       .about .row { grid-template-columns: 1fr; gap: 10px; }
+      .skill-list { grid-template-rows: none; grid-auto-flow: row; }
     }
   </style>
 </head>
@@ -93,7 +98,7 @@
 <section class="hero"><div class="wrap">
   <div>
     <h1>Hi, I'm Hyeonji Kim</h1>
-    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.</p>
+    <p>Finished B.S. in Landscape Architecture at Kyung Hee University. For my graduation project, I developed a master plan for a retirement community, designing spaces around how older adults move, rest, and recover. This led me to a broader question: How do people interact with the spaces around them? That question drew me to data</p>
   </div>
   <div class="photo">
   <img src="images/profile_img.JPG" alt="Hyeonji Kim">
@@ -108,7 +113,14 @@
     </div>
     <div class="row">
       <h3>Skills</h3>
-      <p>sentence.</p>
+      <dl class="skill-list">
+        <div><dt>Programming</dt><dd>Python, R</dd></div>
+        <div><dt>Databases</dt><dd>SQL (Oracle, MySQL, PostgreSQL)</dd></div>
+        <div><dt>Product Analytics</dt><dd>Google Analytics, Amplitude</dd></div>
+        <div><dt>Visualization</dt><dd>Tableau</dd></div>
+        <div><dt>Version Control</dt><dd>Git, GitHub</dd></div>
+        <div><dt>Cloud Computing</dt><dd>Google Cloud Platform</dd></div>
+      </dl>
     </div>
     <div class="row">
       <h3>Future Goal</h3>
