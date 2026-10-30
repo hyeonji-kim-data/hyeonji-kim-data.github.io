@@ -128,11 +128,11 @@
 <section class="title"><div class="wrap">
   <a class="back" href="index.html">← All projects</a>
   <h1>Predicting Sepsis Mortality through Model Tuning and Threshold Analysis with PyTorch</h1>
-  <p class="summary">Predicted the risk of death for ICU sepsis patients from their first 24 hours of data, then lowered the cutoff for flagging a patient as high risk so the model caught more of the patients who died (55% → 80%).</p>
+  <p class="summary">Predicted the risk of death for ICU patients with sepsis using their first 24 hours of data, then lowered the threshold for classifying patients as high-risk to identify more of those who eventually died (55% → 80%).</p>
 
   <div class="meta">
     <span><b>Date</b>Jun 2025</span>
-    <span><b>Type</b>Bootcamp team project (5 members)</span>
+    <span><b>Type</b>Oracle Academy team project (5 members)</span>
     <span><b>Role</b>Deep learning modeling, hyperparameter tuning</span>
   </div>
 
@@ -174,19 +174,19 @@
       <figure>
         <!-- 이미지를 넣으려면 아래 div를 지우고: <img src="images/sepsis-confusion-matrix.png" alt="Confusion matrices of FT-Transformer at threshold 0.5 and at the cross-validated threshold"> -->
         <img src="images/sepsis-confusion-matrix.png" alt="Confusion matrices of FT-Transformer at threshold 0.5 and at the cross-validated threshold">
-        <figcaption>How many deaths were caught or missed when the decision threshold was lowered from 0.5 to a cross-validated value (0.22).</figcaption>
+        <figcaption>Number of patients who died and were correctly identified or missed at decision thresholds of 0.50 and 0.22 (cross-validated).</figcaption>
       </figure>
     </section>
 
     <!-- 2. Goal -->
     <section id="goal">
       <h2><span>02</span>Goal</h2>
-      <p>Sepsis is a leading cause of death in intensive care units, and how early high-risk patients are recognized strongly affects survival.
-        Using data on <b>911 ICU sepsis patients</b> provided by the training program (the worst value of each measurement during the first 24 hours after admission), this project asked:</p>
+      <p>Sepsis is a leading cause of death in intensive care units, making the early identification of high-risk patients critical.
+        This project asked:</p>
       <ul>
-        <li>Can in-hospital death be predicted from first-day information alone?</li>
-        <li>How should the decision threshold be set so that as few deaths as possible are missed?</li>
-        <li>Which clinical measurements does the model rely on most?</li>
+        <li>Can in-hospital mortality be predicted using only data from the first 24 hours?</li>
+        <li>How should the decision threshold be set to minimize missed deaths?</li>
+        <li>Which clinical variables contribute most to the model's predictions?</li>
       </ul>
     </section>
 
@@ -194,11 +194,11 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Data:</b> 911 ICU sepsis patients (270 deaths, about 30%; source not disclosed) with 34 variables, split into 637 for training and 274 for testing.</li>
+        <li><b>Data:</b> 911 ICU sepsis patients (270 deaths) with 34 variables, split into 637 for training and 274 for testing.</li>
         <li><b>Team scope:</b> The team selected variables with SHAP and VIF, compared 12 machine learning and deep learning models, and chose CatBoost as the best performer.</li>
-        <li><b>My role:</b> I trained and tuned two deep learning models, TabNet and FT-Transformer (a transformer model for tables).</li>
+        <li><b>My role:</b> I trained and tuned two deep learning models, TabNet and FT-Transformer.</li>
         <li><b>Tuning:</b> Optuna searched model settings and picked the one with the highest average AUC under five-fold cross-validation.</li>
-        <li><b>Decision threshold:</b> Because only about 30% of patients died, many of them scored below the default cutoff of 0.5. I chose the cutoff that maximized F1 using cross-validated predictions for all 637 training patients.</li>
+        <li><b>Decision threshold:</b> Many of them scored below the default cutoff of 0.5, because only about 30% of patients died. I chose the cutoff that maximized F1 using cross-validated predictions for all 637 training patients.</li>
       </ul>
     </section>
 
@@ -224,7 +224,7 @@
       <p class="guide">Test set of 274 patients (74 deaths). AUC is the mean of five seeds; recall, precision and F1 use the cross-validated threshold and the average of the five seeds' predictions.</p>
       <ul>
         <li><b>FT-Transformer separated patients better.</b> Its AUC was higher than TabNet's (0.771 vs 0.702), and tuning raised both by about 0.02.</li>
-        <li><b>The default cutoff missed nearly half of deaths.</b> Lowering it to 0.22 raised recall from 55% to 80%, at the cost of more false alarms (precision 53% → 41%).</li>
+        <li><b>The default cutoff missed nearly half of deaths.</b> Lowering the decision threshold increased recall from 55% to 80% at the cost of precision.</li>
         <li><b>The two models relied on different variables.</b> TabNet leaned on a severity score (APACHE II); FT-Transformer on level of consciousness (GCS) and a weakened immune system.</li>
       </ul>
       <figure>
@@ -239,7 +239,7 @@
       <ul>
         <li><b>Prioritize first-day monitoring.</b> ICU clinicians could use the risk score to watch high-risk patients more closely from day one.</li>
         <li><b>Set the cutoff by the cost of a miss.</b> Missing a high-risk patient costs far more than an extra alert, so I chose the cutoff from the trade-off between missed deaths and false alarms, not from accuracy alone.</li>
-        <li><b>Limitations:</b> data from one undisclosed source, and per-seed thresholds still varied, so results use the five-seed average. Clinical use would need external validation and an agreed alert level.</li>
+        <li><b>Limitations:</b> data from one undisclosed source and per-seed thresholds still varied, so results use the five-seed average. Clinical use would need external validation and an agreed alert level.</li>
       </ul>
     </section>
 
