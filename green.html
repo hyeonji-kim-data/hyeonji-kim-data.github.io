@@ -193,28 +193,10 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Background:</b> I first planned this analysis in a 2022 landscape information course using 2021 data. I later rebuilt it in R and extended it to four years (2021–2024) to see whether the results held over time.</li>
-        <li><b>Data:</b> Three public datasets from the Seoul Open Data Plaza for 25 districts and four years.
-          <ul>
-            <li>Seoul park statistics (district area and park area)</li>
-            <li>Seoul park statistics (city park area per person)</li>
-            <li>Seoul regional satisfaction survey (green-space satisfaction)</li>
-          </ul>
-        </li>
-        <li><b>Data integration:</b> The downloaded tables had multi-row headers, so I wrote a function that reshapes them by year and item, then joined the three datasets by district and year. I checked that all 25 districts were present in every year.</li>
-        <li><b>Measures:</b>
-          <ul>
-            <li><b>Park area:</b> city park area per person (m²), compared against the 6 m² legal standard.</li>
-            <li><b>Satisfaction:</b> the share of residents who were somewhat or very satisfied with green space (%).</li>
-          </ul>
-        </li>
-        <li><b>Analysis:</b>
-          <ul>
-            <li><b>Spearman rank correlation:</b> compares districts by rank rather than raw value, because a few districts such as Jongno-gu have extremely large park areas that would distort a regular correlation. Repeated for each year.</li>
-            <li><b>Case check:</b> followed Jongno-gu, the district with the most park area per person, across all four years.</li>
-            <li><b>Change analysis:</b> compared each district's change in park area with its change in satisfaction from 2021 to 2024.</li>
-          </ul>
-        </li>
+        <li><b>Background:</b> First planned in a 2022 course with 2021 data, then rebuilt in R for 2021–2024.</li>
+        <li><b>Data:</b> Three Seoul Open Data Plaza datasets (park area, park area per person, satisfaction survey), reshaped and joined by district and year.</li>
+        <li><b>Measures:</b> city park area per person (m²), compared with the 6 m² standard, and the share of residents somewhat or very satisfied with green space (%).</li>
+        <li><b>Analysis:</b> Spearman rank correlation for each year, since a few districts such as Jongno-gu have extreme park areas, plus a 2021–2024 change comparison.</li>
       </ul>
     </section>
 
@@ -239,18 +221,14 @@
       </div>
       <p class="guide">rho ranges from −1 to 1; values near 0 mean no relationship. p &lt; 0.05 would mean the relationship is unlikely to be due to chance.</p>
       <ul>
-        <li><b>More park area did not mean higher satisfaction.</b> In all four years, the rank correlation between park area per person and satisfaction was close to zero (rho −0.02 to 0.21), and none was statistically significant (p &gt; 0.3).</li>
-        <li><b>Meeting the legal standard made no difference.</b> In 2021, 8 of 25 districts fell below 6 m² per person. Their average satisfaction (46.3%) was almost the same as that of districts that met the standard (45.8%).</li>
-        <li><b>The district with the most park area was not the most satisfied.</b> Jongno-gu ranked 1st in park area per person every year, but its satisfaction rank moved from 21st to 13th, 23rd and 2nd (2021–2024).</li>
-        <li><b>Satisfaction changed for reasons other than park area.</b> Park area per person barely changed from 2021 to 2024 (+0.21 m² on average), while satisfaction rose by 9.1 percentage points on average. Districts whose park area grew did not see larger gains in satisfaction (rho = 0.07, p = 0.73). Satisfaction ranks also shifted a lot from year to year (rank correlation between years −0.25 to 0.33).</li>
+        <li><b>More park area did not mean higher satisfaction.</b> The correlation was close to zero in every year (rho −0.02 to 0.21), and none was significant.</li>
+        <li><b>Meeting the legal standard made no difference.</b> The 8 districts below 6 m² had about the same satisfaction as the rest (46.3% vs. 45.8%, 2021).</li>
+        <li><b>The district with the most park area was not the most satisfied.</b> Jongno-gu ranked 1st in park area every year, but 21st, 13th, 23rd and 2nd in satisfaction.</li>
+        <li><b>Satisfaction changed for other reasons.</b> From 2021 to 2024, satisfaction rose 9.1%p while park area barely changed (+0.21 m²).</li>
       </ul>
       <figure>
         <img src="images/green-scatter-by-year.png" alt="Scatter plots of park area per person and satisfaction for each year from 2021 to 2024">
         <figcaption>Park area per person vs. satisfaction for each year. The points show no consistent pattern in any year.</figcaption>
-      </figure>
-      <figure>
-        <img src="images/green-area-2021.png" alt="City park area per person by district in 2021 with the 6 square meter legal standard">
-        <figcaption>City park area per person by district in 2021. Orange districts fall below the legal standard of 6 m² per person.</figcaption>
       </figure>
     </section>
 
@@ -258,21 +236,9 @@
     <section id="decision">
       <h2><span>05</span>From Analysis to Decision</h2>
       <ul>
-        <li><b>Who would use it:</b> City and district park planners who decide where to add or improve green space.</li>
-        <li><b>What decisions change:</b>
-          <ul>
-            <li>Park area per person alone is not a good target for raising residents' satisfaction, so meeting the 6 m² standard should not be treated as the end goal.</li>
-            <li>Plans should also look at what area figures miss, such as how close parks are to homes, how easy they are to use, and how well they are maintained.</li>
-          </ul>
-        </li>
-        <li><b>Limitations and next steps:</b>
-          <ul>
-            <li>With only 25 districts, weak relationships are hard to detect, so the result means no clear relationship was found, not that none exists.</li>
-            <li>District averages can hide differences between neighborhoods within the same district.</li>
-            <li>Satisfaction ranks changed a lot from year to year, which suggests that survey sampling may add noise.</li>
-            <li>Next steps: analyze at the neighborhood level and add measures of park access and quality, such as walking distance to the nearest park.</li>
-          </ul>
-        </li>
+        <li><b>Don't treat the 6 m² standard as the end goal.</b> Park area per person did not track satisfaction, so park planners should not use it as their main target.</li>
+        <li><b>Look at what area figures miss.</b> Plans should also consider how close parks are to homes, how easy they are to use, and how well they are maintained.</li>
+        <li><b>Limitations:</b> With only 25 districts, weak relationships are hard to detect, and district averages hide neighborhood differences. A next step is a neighborhood-level analysis with access measures such as walking distance to the nearest park.</li>
       </ul>
     </section>
 
