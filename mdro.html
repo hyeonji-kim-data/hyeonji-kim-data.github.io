@@ -128,7 +128,7 @@
 <section class="title"><div class="wrap">
   <a class="back" href="index.html">← All projects</a>
   <h1>Monitoring MDRO Patterns through Time-Based Analysis with SQL and Tableau</h1>
-  <p class="summary">Aggregated hospital microbiology test results under international surveillance rules and built a Tableau dashboard that lets the infection control team see multidrug-resistant organism (MDRO) activity on a single screen.</p>
+  <p class="summary">Aggregated hospital microbiology test results in accordance with WHO-GLASS surveillance guidelines and built a prototype Tableau dashboard that enables infection control teams to monitor multidrug-resistant organism (MDRO) activity on a single screen.</p>
 
   <div class="meta">
     <span><b>Date</b>Jun–Aug 2025</span>
@@ -182,9 +182,9 @@
       <p>Antimicrobial-resistant infections raise mortality, length of stay and medical costs, so hospitals must continuously monitor and report them.
         Using microbiology culture results from a university hospital, this project set out to:</p>
       <ul>
-        <li>Count MDRO cases in line with the WHO GLASS standard by removing repeat tests of the same patient.</li>
-        <li>Separate infections acquired in the hospital from those brought in from outside.</li>
-        <li>Build a dashboard where the infection control team can filter by organism, specimen and period and see the current situation right away.</li>
+        <li>Count MDRO cases per WHO GLASS guidelines, excluding repeat tests from the same patient.</li>
+        <li>Distinguish hospital-acquired cases from cases acquired outside the hospital.</li>
+        <li>Build a prototype dashboard that allows the infection control team to filter results by organism, specimen type, and time period to monitor MDRO cases at a glance.</li>
       </ul>
     </section>
 
@@ -192,10 +192,10 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Team scope:</b> The team built an infection response platform (lab report structuring, alert system, chatbot and dashboard). I built the statistics dashboard.</li>
-        <li><b>Data:</b> Microbiology culture results from a university hospital, structured from free-text lab reports by teammates.</li>
-        <li><b>Deduplication:</b> A SQL query with window functions keeps only the first test per patient, organism and specimen within one year, following WHO GLASS rules.</li>
-        <li><b>Dashboard:</b> Three Tableau tabs (Monitoring, Ward Status, Statistics) with filters and KPI cards, built around four surveillance metrics.</li>
+        <li><b>Team scope:</b> The team developed an infection surveillance platform with structured lab reports, an alert system, a chatbot, and a dashboard. I was responsible for the dashboard prototype.</li>
+        <li><b>Data:</b> Microbiology culture results from a university hospital spanning 3.5 years (Jul 2020–Dec 2023), using structured data derived from free-text lab reports by teammates.</li>
+        <li><b>Deduplication:</b> Wrote a SQL query using window functions to retain only the first test per patient, organism, and specimen within each year, following WHO GLASS deduplication criteria.</li>
+        <li><b>Dashboard:</b> Built three Tableau tabs (Monitoring, Ward-Level Status, and Statistics) with filters for year, month, organism, and ward.</li>
       </ul>
     </section>
 
