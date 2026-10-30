@@ -83,13 +83,25 @@
       .about .row { grid-template-columns: 1fr; gap: 10px; }
       .skill-list { grid-template-rows: none; grid-auto-flow: row; }
     }
+    /* 이메일 아이콘: 클릭하면 아래에 "Copied!" 표시 */
+  .copy-email { position: relative; }
+  .copy-email::after {
+  content: "Copied!";
+  position: absolute; top: 100%; left: 50%;
+  transform: translate(-50%, 6px);
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--pill); color: #fff;
+  font-size: 12px; font-weight: 600; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .copy-email.copied::after { opacity: 1; }
   </style>
 </head>
 <body>
 
 <header><div class="wrap">
   <!-- 이메일 주소, CV 파일명, 링크드인 주소를 본인 것으로 바꿔주세요 -->
-  <a href="mailto:hyeonji.kim.data@gmail.com" aria-label="Email" title="hyeonji.kim.data@gmail.com">
+  <a href="mailto:hyeonji.kim.data@gmail.com" class="copy-email" data-email="hyeonji.kim.data@gmail.com" aria-label="Email" title="hyeonji.kim.data@gmail.com">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v16H2z M3.5 5.5 12 12l8.5-6.5"/></svg>
   </a>
   <a href="files/CV.pdf" target="_blank" rel="noopener" title="Resume">Resume</a>
@@ -197,19 +209,17 @@
   <small>Copyright © 2026 Hyeonji Kim</small>
 </div></footer>
 
-</body>
 <script>
-  // 이메일 아이콘을 누르면 주소를 복사하고, 메일 앱도 열려고 시도해요
+  // 이메일 아이콘을 누르면 주소를 복사하고 "Copied!"를 잠깐 보여줘요
   document.querySelectorAll('.copy-email').forEach(function (a) {
     a.addEventListener('click', function () {
-      var email = a.dataset.email;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(email).then(function () {
-          a.title = 'Copied: ' + email;
-          alert('Email address copied: ' + email);
-        });
-      }
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(a.dataset.email).then(function () {
+        a.classList.add('copied');
+        setTimeout(function () { a.classList.remove('copied'); }, 1500);
+      });
     });
   });
-</script>
+</script>  
+</body>
 </html>
