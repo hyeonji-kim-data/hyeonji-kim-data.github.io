@@ -41,9 +41,10 @@
     .about h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--pill); }
     .about p { margin: 0; line-height: 1.7; max-width: 70ch; }
     .skill-list { margin: 0; display: grid; grid-template-rows: repeat(3, auto); grid-auto-flow: column; gap: 8px 40px; line-height: 1.7; }
-    .skill-list div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; }
-    .skill-list dt { font-size: 15px; }
-    .skill-list dd { font-size: 15px; }
+    .skill-list { grid-template-columns: repeat(2, max-content); }   /* 두 칸이 내용 길이에 맞춰 넓어짐 */
+    .skill-list div { display: grid; grid-template-columns: 135px auto; gap: 12px; }
+    .skill-list dt { font-size: 15px; font-weight: 600; color: var(--pill); }   /* 항목 이름: 굵게, Skills 제목과 같은 색 */
+    .skill-list dd { font-size: 15px; margin: 0; }
     .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
     .head h2 { margin: 0; font-size: 22px; font-weight: 600; color: var(--link); }
     .head a { color: var(--link); text-decoration: none; }
@@ -81,7 +82,7 @@
       .cards, .work { grid-template-columns: 1fr; }
       .work h3 { font-size: 20px; }
       .about .row { grid-template-columns: 1fr; gap: 10px; }
-      .skill-list { grid-template-rows: none; grid-auto-flow: row; }
+      .skill-list { grid-template-rows: none; grid-auto-flow: row; grid-template-columns: 1fr; }
     }
     /* 이메일 아이콘: 클릭하면 아래에 "Copied!" 표시 */
   .copy-email { position: relative; }
