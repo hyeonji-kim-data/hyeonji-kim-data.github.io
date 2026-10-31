@@ -285,10 +285,11 @@
   })();
 </script>
 <script>
-  // 이메일 아이콘을 누르면 주소를 복사하고 "Copied!"를 잠깐 보여줘요
+  // 이메일 아이콘을 누르면 주소만 복사하고 "Copied!"를 잠깐 보여줘요
   document.querySelectorAll('.copy-email').forEach(function (a) {
-    a.addEventListener('click', function () {
-      if (!navigator.clipboard) return;
+    a.addEventListener('click', function (e) {
+      if (!navigator.clipboard) return;   // 복사가 안 되는 환경에서는 메일 앱 열기로 대신해요
+      e.preventDefault();                 // 메일 앱이 열리지 않게 막아요
       navigator.clipboard.writeText(a.dataset.email).then(function () {
         a.classList.add('copied');
         setTimeout(function () { a.classList.remove('copied'); }, 1500);
