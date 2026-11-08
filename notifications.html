@@ -116,10 +116,12 @@
 <header><div class="wrap">
   <a class="home" href="index.html">Hyeonji Kim</a>
   <nav>
-    <a href="mailto:your.email@example.com" aria-label="Email" title="Email">
+    <a href="mailto:hyeonji.kim.data@gmail.com" class="copy-email" data-email="hyeonji.kim.data@gmail.com" aria-label="Email" title="Email">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v16H2z M3.5 5.5 12 12l8.5-6.5"/></svg>
     </a>
-    <a href="files/CV.pdf" target="_blank" rel="noopener" title="CV">CV</a>
+    <a href="files/CV.pdf" target="_blank" rel="noopener" aria-label="Resume" title="Resume">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2h11l5 5v15H4z M15 2v5h5 M7.5 11.5h9 M7.5 15h9 M7.5 18.5h6"/></svg>
+</a>
     <a href="https://www.linkedin.com/in/your-id/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">in</a>
   </nav>
 </div></header>
@@ -145,9 +147,8 @@
   </div>
   <!-- 사용 방법·모델 (테두리만) -->
   <div class="badges">
-    <span class="badge method">Micro-randomized trial</span>
-    <span class="badge method">GEE</span>
-    <span class="badge method">Policy evaluation</span>
+    <!--span class="badge method">Micro-randomized trial</span-->
+
   </div>
 </div></section>
 
@@ -270,6 +271,19 @@
     window.addEventListener('scroll', update, { passive: true });
     update();
   })();
+</script>
+<script>
+  // 이메일 아이콘을 누르면 주소만 복사하고 "Copied!"를 잠깐 보여줘요
+  document.querySelectorAll('.copy-email').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (!navigator.clipboard) return;   // 복사가 안 되는 환경에서는 메일 앱 열기로 대신해요
+      e.preventDefault();                 // 메일 앱이 열리지 않게 막아요
+      navigator.clipboard.writeText(a.dataset.email).then(function () {
+        a.classList.add('copied');
+        setTimeout(function () { a.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
 </script>
 </body>
 </html>
