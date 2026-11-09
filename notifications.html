@@ -129,8 +129,8 @@
 <!-- ================= 제목 영역 ================= -->
 <section class="title"><div class="wrap">
   <a class="back" href="index.html">← All projects</a>
-  <h1>Reducing Ineffective Walking Notifications through Causal Analysis of a Micro-Randomized Trial in Python</h1>
-  <p class="summary">Re-analyzed a 6-week randomized notification study to find when walking reminders actually increased steps, and proposed a rule that cuts notifications by 44% without a measurable loss in steps.</p>
+  <h1>Evaluating When Walking Notifications Work: A Causal Analysis of a Micro-Randomized Trial Using Python</h1>
+  <p class="summary">Re-analyzed data from a 6-week randomized notification study to estimate when walking reminders increased step counts, then evaluated a notification rule that could reduce the number of reminders sent by 44%, with its effectiveness to be tested in a future experiment.</p>
 
   <div class="meta">
     <span><b>Date</b>2026</span>
@@ -173,20 +173,23 @@
     <section id="figure">
       <h2><span>01</span>Figure</h2>
       <figure>
-        <img src="images/notif-weekly.png" alt="Engagement rate and step effect of walking notifications by study week">
-        <figcaption>Engagement with walking notifications stayed near 70% every week, while their effect on steps fell from +131% in week 1 to about zero by week 5.</figcaption>
+        <img src="images/notif-weekly.png" alt="Engagement rate and estimated step effect of walking notifications by study week">
+        <figcaption>For walking notifications, engagement stayed near 70% every week, while the estimated effect on steps fell from +131% in week 1 to near zero from week 5.</figcaption>
       </figure>
     </section>
 
     <!-- 2. Goal -->
     <section id="goal">
       <h2><span>02</span>Goal</h2>
-      <p>Does a response mean a notification worked? Engagement, such as taps or feedback, is easy to measure, but it does not show whether the user actually moved more, and unhelpful notifications can lead users to mute or delete the app.
-        Using a study in which each notification was randomly sent or withheld, this project asked:</p>
+      <p>Does a response mean a notification worked?
+
+         Engagement, such as taps or feedback, is easy to measure, but it does not necessarily show whether users actually became more active. Moreover, irrelevant or poorly timed notifications may cause users to mute notifications or even delete the app.
+
+         Using data from a study in which each notification was randomly delivered or withheld, this project asked:</p>
       <ul>
-        <li>When, and for whom, do walking notifications increase steps?</li>
-        <li>Does engagement reflect that effect?</li>
-        <li>Which notifications could be removed without losing steps?</li>
+        <li>When and for whom do walking notifications increase step counts?</li>
+        <li>Does engagement reflect changes in step counts?</li>
+        <li>Which notifications show no detectable effect, and how much could notification volume be reduced by removing them?</li>
       </ul>
     </section>
 
@@ -194,11 +197,12 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Data:</b> Public HeartSteps V1 data: 37 adults over about six weeks. At five decision points a day, a notification was sent at random with probability 0.6 (6,331 decision points analyzed).</li>
-        <li><b>Preparation:</b> Log-transformed skewed step counts, cleaned weather error codes and grouped 228 location labels. I confirmed that randomization worked in every situation.</li>
-        <li><b>Effect analysis:</b> Re-estimated the published model with GEE, matching the paper's main result, then estimated effects by time slot, day, location, user characteristics and study week, and compared them with engagement.</li>
-        <li><b>Policy evaluation:</b> Built seven sending rules from information known before sending. For each, I estimated the effect of the notifications it would skip and the resulting change in steps.</li>
-        <li><b>Robustness:</b> Repeated every analysis with two treatments of missing steps.</li>
+        <li><b>Data:</b> Public HeartSteps V1 data from 37 adults over approximately six weeks. Participants faced five decision points per day, with notifications randomized for delivery at each point with a probability of 0.6. Half of the notification opportunities were designated for walking notifications (6,331 decision points analyzed).</li>
+        <li><b>Preparation:</b> Log-transformed skewed step counts, cleaned weather error codes, and grouped 228 location labels. Checked that randomization worked as designed: send rates were 0.56–0.61 across time slots, locations, days, weather and study weeks (design: 0.6).</li>
+        <li><b>Effect analysis:</b> Re-estimated the published model using GEE, reproducing the paper's main finding. Then estimated effects across time slots, days, locations, user characteristics, and study weeks. Effects were estimated on log(steps + 0.5), as in the original paper. Percentage changes therefore reflect relative differences on the transformed scale, not changes in arithmetic mean step counts.</li>
+        <li><b>Engagement:</b> Measured engagement as the share of notifications receiving any recorded response (positive feedback, negative feedback or snooze). Excluded notifications without response records (22.5% of those sent) from this calculation.</li>
+        <li><b>Policy evaluation:</b> Developed seven notification rules using information available before each decision point (time slot, day, study week and a sign-up question) and compared each with the existing randomized policy. The rules differed from the randomized policy only at decision points where they would suppress a notification. I therefore estimated the effect of the walking notifications that each rule would skip (the effect potentially forgone) and the corresponding change in 30-minute step counts on the log scale.</li>
+        <li><b>Robustness:</b> Repeated all analyses using two different approaches to handling missing step counts.</li>
       </ul>
     </section>
 
