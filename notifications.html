@@ -210,13 +210,13 @@
     <section id="results">
       <h2><span>04</span>Results</h2>
       <div class="numbers">
-        <div><strong>44%</strong><span>Fewer notifications under the proposed rule</span></div>
-        <div><strong>&minus;0.7%</strong><span>Change in 30-minute steps (95% CI &minus;3.4% to +2.1%)</span></div>
-        <div><strong>74% &rarr; 68%</strong><span>Engagement, week 1 vs. week 6+, while the effect fell to zero</span></div>
+        <div><strong>44%</strong><span>Fewer walking notifications under the evaluated rule</span></div>
+        <div><strong>&minus;0.7%</strong><span>Estimated change in 30-minute steps (95% CI −3.4% to +2.1%)</span></div>
+        <div><strong>74% &rarr; 68%</strong><span>Engagement with walking notifications, week 1 vs. week 6+</span></div>
       </div>
       <div class="table-scroll">
         <table>
-          <thead><tr><th>Rule</th><th>Notifications removed</th><th>Change in 30-min steps (95% CI)</th></tr></thead>
+          <thead><tr><th>Rule (evaluated on past data)</th><th>Walking notifications removed</th><th>Estimated change in 30-min steps (95% CI)</th></tr></thead>
           <tbody>
             <tr class="best"><td>Weekdays, no morning commute</td><td>44%</td><td>&minus;0.7% (&minus;3.4 to +2.1)</td></tr>
             <tr><td>First 4 weeks only</td><td>39%</td><td>+1.0% (&minus;2.0 to +4.0)</td></tr>
@@ -225,16 +225,16 @@
           </tbody>
         </table>
       </div>
-      <p class="guide">Change in 30-minute steps across all available decision points, compared with the current policy of sending at every point.</p>
+      <p class="guide">Compared against the current policy, which randomly delivers a notification with a probability of 0.6 at each available decision point. Estimated changes are reported on the log scale and averaged across all available decision points. Anti-sedentary notifications remain unchanged.</p>
       <ul>
-        <li><b>The effect faded over time.</b> Notifications raised steps by about 59% on day 1, and the effect reached zero around day 29.</li>
-        <li><b>Timing mattered.</b> Walking notifications worked best at weekday lunchtime (+76%) and showed no effect during the morning commute or on weekends, although these differences were not statistically confirmed.</li>
-        <li><b>Engagement did not track the effect.</b> Users kept responding after the effect was gone.</li>
-        <li><b>Many notifications could be dropped.</b> Notifications skipped by the proposed rule had no detectable effect (+5%, p = 0.63). The narrowest rule, weekday lunch only, also dropped moments that worked.</li>
+        <li><b>The effect faded over time.</b> A model assuming a linear decline estimated a +59% effect of all notifications on the first day, with the estimated effect approaching zero around day 29.</li>
+        <li><b>Timing may matter.</b> The largest estimated effect of walking notifications occurred at weekday lunchtime (+76%), while no clear effect was detected during the morning commute or on weekends. However, differences across situations were not statistically significant.</li>
+        <li><b>Engagement did not track the effect.</b> Users continued responding to walking notifications even when the estimated effect was close to zero.</li>
+        <li><b>Some notifications showed no detectable effect.</b> Notifications that the weekday rule would skip had an estimated effect of +5% (95% CI: −14% to +30%), with no statistically significant effect. The most restrictive rule, which sends notifications only at weekday lunchtime, would also exclude decision points where notifications may be effective</li>
       </ul>
       <figure>
         <img src="images/notif-policy.png" alt="Effect of skipped notifications and change in 30-minute steps for each sending rule">
-        <figcaption>Effect of the notifications each rule would skip (left), and the resulting change in 30-minute steps (right).</figcaption>
+        <figcaption>Estimated effect of the walking notifications each rule would skip (left), and the resulting change in 30-minute steps (right).</figcaption>
       </figure>
     </section>
 
@@ -242,10 +242,10 @@
     <section id="decision">
       <h2><span>05</span>From Analysis to Decision</h2>
       <ul>
-        <li><b>Send walking notifications on weekdays from lunch to evening.</b> This removes 44% of notifications while keeping steps about the same, which may reduce notification fatigue.</li>
-        <li><b>Measure success by behavior, not taps.</b> Keep a small random holdout of withheld notifications, so the step difference shows when notifications stop working.</li>
-        <li><b>Test before rollout.</b> Randomly assign new users to the current policy or the proposed rule, with steps as the primary outcome and muting and dropout as secondary outcomes.</li>
-        <li><b>Limitations:</b> 37 participants from a highly educated group (2015&ndash;16). Most differences between situations were not statistically confirmed, and the rules were built and evaluated on the same data.</li>
+        <li><b>Test a weekday lunch-to-evening rule.</b> In a retrospective evaluation, this rule would have sent 44% fewer walking notifications, with an estimated change of −0.7% in 30-minute step counts (95% CI: −3.4% to +2.1%). Because a decrease of up to 3.4% cannot be ruled out, the rule should be tested in a new experiment before implementation.</li>
+        <li><b>Measure behavioral impact, not just taps.</b> Retain a small randomized holdout in which notifications are withheld, allowing the effect of sending notifications to be monitored over time.</li>
+        <li><b>Validation plan:</b> Randomly assign new users to either the current policy or the proposed rule. Use daily and 30-minute step counts as primary outcomes, and notification muting and dropout as secondary outcomes.</li>
+        <li><b>Limitations:</b> The study included only 37 participants, drawn from a highly educated population, and was conducted in 2015–16. Most differences across situations and user groups were not statistically significant. In addition, the notification rules were developed and evaluated using the same dataset.</li>
       </ul>
     </section>
 
