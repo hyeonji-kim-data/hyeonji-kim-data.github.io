@@ -212,7 +212,7 @@
         <li><b>Team scope:</b> The team selected variables with SHAP and VIF, compared 12 machine learning and deep learning models, and chose CatBoost as the best performer.</li>
         <li><b>My role:</b> I trained and tuned two deep learning models, TabNet and FT-Transformer.</li>
         <li><b>Tuning:</b> Optuna searched model settings and picked the one with the highest average AUC under five-fold cross-validation.</li>
-        <li><b>Decision threshold:</b> Many of them scored below the default cutoff of 0.5, because only about 30% of patients died. I chose the cutoff that maximized F1 using cross-validated predictions for all 637 training patients.</li>
+        <li><b>Decision threshold:</b> Many of them scored below the default cutoff of 0.5 because only about 30% of patients died. I chose the cutoff that maximized F1 using cross-validated predictions for all 637 training patients.</li>
       </ul>
     </section>
 
@@ -235,7 +235,7 @@
           </tbody>
         </table>
       </div>
-      <p class="guide">Test set of 274 patients (74 deaths). AUC is the mean of five seeds; recall, precision and F1 use the cross-validated threshold and the average of the five seeds' predictions.</p>
+      <p class="guide">Test set of 274 patients (74 deaths). AUC is the mean of five seeds; recall, precision and F1 use the cross-validated threshold and the averaged predictions across five random seeds.</p>
       <ul>
         <li><b>FT-Transformer separated patients better.</b> Its AUC was higher than TabNet's (0.771 vs 0.702), and tuning raised both by about 0.02.</li>
         <li><b>The default cutoff missed nearly half of deaths.</b> Lowering the decision threshold increased recall from 55% to 80% at the cost of precision.</li>
@@ -253,7 +253,7 @@
       <ul>
         <li><b>Prioritize first-day monitoring.</b> ICU clinicians could use the risk score to watch high-risk patients more closely from day one.</li>
         <li><b>Show the trade-off behind the cutoff.</b> We chose the threshold that maximized the F1 score, balancing the need to identify patients who died against the risk of false alarms, rather than relying on accuracy or the default 0.5 threshold.</li>
-        <li><b>Limitations:</b> data from one undisclosed source and per-seed thresholds still varied, so results use the five-seed average. Clinical use would need external validation and an agreed alert level.</li>
+        <li><b>Limitations:</b> Data from one undisclosed source and per-seed thresholds still varied, so results are based on the average across five random seeds. Clinical application would require external validation and an agreed alert level.</li>
       </ul>
     </section>
 
