@@ -193,7 +193,7 @@
     <!-- 2. Goal -->
     <section id="goal">
       <h2><span>02</span>Goal</h2>
-      <p>Antimicrobial-resistant infections raise mortality, length of stay and medical costs, so hospitals must continuously monitor and report them.
+      <p>Antimicrobial-resistant infections increase mortality, length of hospital stay, and healthcare costs, so hospitals must continuously monitor and report them.
         Using microbiology culture results from a university hospital, this project set out to:</p>
       <ul>
         <li>Count MDRO cases per WHO GLASS guidelines, excluding repeat tests from the same patient.</li>
@@ -207,10 +207,10 @@
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
         <li><b>Team scope:</b> The team developed an infection surveillance platform with structured lab reports, an alert system, a chatbot, and a dashboard. I was responsible for the dashboard prototype.</li>
-        <li><b>Data:</b> Microbiology culture results from a university hospital spanning 3.5 years (Jul 2020–Dec 2023), using structured data derived from free-text lab reports by teammates.</li>
+        <li><b>Data:</b> Microbiology culture results from a university hospital, collected over 3.5 years (Jul 2020–Dec 2023), using structured data derived from free-text lab reports by teammates.</li>
         <li><b>Deduplication:</b> Wrote a SQL query using window functions to retain only the first test per patient, organism, and specimen within each year, following WHO GLASS deduplication criteria.</li>
-        <li><b>Trend preparation:</b> For the blood and ward charts, months with no detections were filled with zero so monthly trends stay continuous.</li>
-        <li><b>48-hour rule:</b> An MDRO detected in a specimen collected more than 48 hours after admission (i.e., more than two calendar days later) was classified as hospital-onset, serving as a proxy for a potentially hospital-acquired infection. Detections within the first 48 hours were classified as community-onset.</li>
+        <li><b>Trend preparation:</b> For the blood and ward charts, months with no detections were filled with zero so that monthly trends stay continuous.</li>
+        <li><b>48-hour rule:</b> An MDRO detected in a specimen which was collected more than 48 hours after admission (i.e., more than two calendar days later) was classified as hospital-onset, serving as a proxy for a potentially hospital-acquired infection. Detections within the first 48 hours were classified as community-onset.</li>
         <li><b>Dashboard:</b> Built three Tableau tabs (Monitoring, Ward-Level Status, and Statistics) with filters for year, month, organism, and ward.</li>
       </ul>
     </section>
