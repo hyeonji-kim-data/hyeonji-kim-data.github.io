@@ -95,7 +95,7 @@
     .links a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid #aad5cb; border-radius: 4px; text-decoration: none; font-weight: 600; color: var(--pill); }
     .links a:hover { border-color: var(--hover); color: var(--hover); }
 
-    .guide { color: var(--muted); font-size: 14px; }  /* 작성 안내 문구: 내용을 채우면 지우세요 */
+    .guide { color: var(--muted); font-size: 14px; max-width: none;}  /* 작성 안내 문구: 내용을 채우면 지우세요 */
 
     footer .wrap { padding-block: 32px 40px; text-align: center; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
 
@@ -197,12 +197,12 @@
     <section id="method">
       <h2><span>03</span>Methodology &amp; Summary</h2>
       <ul>
-        <li><b>Data:</b> Public HeartSteps V1 data from 37 adults over approximately six weeks. Participants faced five decision points per day, with notifications randomized for delivery at each point with a probability of 0.6. Half of the notification opportunities were designated for walking notifications (6,331 decision points analyzed).</li>
-        <li><b>Preparation:</b> Log-transformed skewed step counts, cleaned weather error codes, and grouped 228 location labels. Checked that randomization worked as designed: send rates were 0.56–0.61 across time slots, locations, days, weather and study weeks (design: 0.6).</li>
-        <li><b>Effect analysis:</b> Re-estimated the published model using GEE, reproducing the paper's main finding. Then estimated effects across time slots, days, locations, user characteristics, and study weeks. Effects were estimated on log(steps + 0.5), as in the original paper. Percentage changes therefore reflect relative differences on the transformed scale, not changes in arithmetic mean step counts.</li>
-        <li><b>Engagement:</b> Measured engagement as the share of notifications receiving any recorded response (positive feedback, negative feedback or snooze). Excluded notifications without response records (22.5% of those sent) from this calculation.</li>
-        <li><b>Policy evaluation:</b> Developed seven notification rules using information available before each decision point (time slot, day, study week and a sign-up question) and compared each with the existing randomized policy. The rules differed from the randomized policy only at decision points where they would suppress a notification. I therefore estimated the effect of the walking notifications that each rule would skip (the effect potentially forgone) and the corresponding change in 30-minute step counts on the log scale. I computed the change both on the log scale and in average steps without the log transform.</li>
-        <li><b>Robustness:</b> Repeated all analyses using two different approaches to handling missing step counts.</li>
+        <li><b>Data:</b> The public HeartSteps V1 dataset included data from 37 adults over approximately six weeks. Participants encountered five decision points each day, and the study randomized notification delivery at each point with a probability of 0.6. Half of the notification opportunities were designated for walking notifications (6,331 decision points analyzed).</li>
+        <li><b>Preparation:</b> Skewed step counts were log-transformed, weather error codes were corrected, and 228 location labels were grouped into broader categories. I also verified that randomization followed the study design: notification send rates ranged from 0.56 to 0.61 across time slots, locations, days, weather conditions, and study weeks, close to the intended probability of 0.6.</li>
+        <li><b>Effect analysis:</b> Using GEE(generalized estimating equations), I re-estimated the model published in the original paper and reproduced its main finding. The analysis then examined notification effects across time slots, days, locations, user characteristics, and study weeks. I measured the outcome as log(steps + 0.5), consistent with the original paper. Thus, percentage changes represent relative differences on the transformed scale, not differences in arithmetic mean step counts.</li>
+        <li><b>Engagement:</b> Engagement was defined as the proportion of notifications that received a recorded response, including positive feedback, negative feedback, or snooze. Notifications without response records (22.5% of those sent) were excluded from this calculation.</li>
+        <li><b>Policy evaluation:</b> I developed seven notification rules based on information available before each decision point: time slot, day, study week, and a sign-up question. I compared each rule with the existing randomized policy. Each rule differed from the randomized policy only at decision points where it would suppress a notification. For each rule, I estimated the effect of the walking notifications it would skip (the effect potentially forgone) and the corresponding change in 30-minute step counts on the log scale. I also calculated the change in average steps without applying the log transformation.</li>
+        <li><b>Robustness:</b> All analyses were repeated using two approaches to handling missing step counts: treating them as zero and excluding them.</li>
       </ul>
     </section>
 
@@ -227,10 +227,10 @@
       </div>
       <p class="guide">Compared with the current policy, which sends a notification at random with probability 0.6 at every available decision point. Changes are averaged over all available decision points; anti-sedentary notifications are unchanged. For the weekday rule, the change in average steps without the log transform was +0.8% (95% CI &minus;0.8% to +2.4%).</p>
       <ul>
-        <li><b>The effect faded over time.</b> A model assuming a linear decline estimated a +59% effect of all notifications on the first day, with the estimated effect approaching zero around day 29.</li>
-        <li><b>Timing may matter.</b> The largest estimated effect of walking notifications occurred at weekday lunchtime (+76%), while no clear effect was detected during the morning commute or on weekends. However, differences across situations were not statistically significant.</li>
-        <li><b>Engagement did not track the effect.</b> Users continued responding to walking notifications even when the estimated effect was close to zero.</li>
-        <li><b>Some notifications showed no detectable effect.</b> Notifications that the weekday rule would skip had an estimated effect of +5% (95% CI: −14% to +30%), with no statistically significant effect. The most restrictive rule, which sends notifications only at weekday lunchtime, would also exclude decision points where notifications may be effective</li>
+        <li><b>The effect faded over time.</b> A model assuming a linear decline estimated a +59% effect of all notifications on the first day. The estimated effect gradually decreased and was close to zero by around day 29.</li>
+        <li><b>Timing may matter.</b> Walking notifications had the largest estimated effect at weekday lunchtime (+76%). However, the analysis found no clear effect during the morning commute or on weekends. The differences between these situations were not statistically significant.</li>
+        <li><b>Engagement did not track the effect.</b> Users continued to respond to walking notifications even when the estimated effect was close to zero.</li>
+        <li><b>Some notifications showed no detectable effect.</b> Walking notifications at decision points that the weekday rule would skip had an estimated effect of +5% (95% CI: −14% to +30%). This result was not statistically significant. The most restrictive rule, which sends notifications only at weekday lunchtime, would also skip other decision points where notifications might still be effective.</li>
       </ul>
       <figure>
         <img src="images/notif-policy.png" alt="Effect of skipped notifications and change in 30-minute steps for each sending rule">
@@ -242,10 +242,10 @@
     <section id="decision">
       <h2><span>05</span>From Analysis to Decision</h2>
       <ul>
-        <li><b>Test a weekday lunch-to-evening rule.</b> Evaluated retrospectively, the rule would have sent 44% fewer walking notifications. The estimated change in 30-minute step counts was −0.7% on the log scale (95% CI: −3.4% to +2.1%) and +0.8% in average step counts (95% CI: −0.8% to +2.4%). Neither estimate was statistically different from zero. However, this does not establish that the rule causes no loss in physical activity. A new experiment is needed before rollout.</li>
-        <li><b>Measure behavioral impact, not just taps.</b> Retain a small randomized holdout in which notifications are withheld, allowing the effect of sending notifications to be monitored over time.</li>
-        <li><b>Validation plan:</b> Randomly assign new users to either the current policy or the proposed rule. Use daily and 30-minute step counts as primary outcomes, and notification muting and dropout as secondary outcomes.</li>
-        <li><b>Limitations:</b> The study included only 37 participants, drawn from a highly educated population, and was conducted in 2015–16. Most differences across situations and user groups were not statistically significant. In addition, the notification rules were developed and evaluated using the same dataset.</li>
+        <li><b>Test a weekday lunch-to-evening rule.</b> When evaluated using the existing data, the rule would have sent 44% fewer walking notifications. The estimated change in 30-minute step counts was −0.7% on the log scale (95% CI: −3.4% to +2.1%) and +0.8% in average step counts (95% CI: −0.8% to +2.4%). Neither estimate was statistically different from zero. However, these results do not prove that the rule would have no negative effect on physical activity. A new experiment is needed before the rule is introduced.</li>
+        <li><b>Measure behavioral impact, not just taps.</b> Keep a small group of users who are randomly assigned not to receive notifications. This allows the effect of notifications on physical activity to be monitored over time.</li>
+        <li><b>Validation plan:</b> Randomly assign new users to one of two groups: one that receives notifications under the current policy and another that follows the proposed rule. Use daily step counts and step counts within 30-minute periods as the primary outcomes. Track notification muting and user dropout as secondary outcomes.</li>
+        <li><b>Limitations:</b> The study included only 37 participants, most of whom had high levels of education, and took place in 2015–16. Most differences across situations and user groups were not statistically significant. In addition, the same dataset was used both to develop the notification rules and to evaluate their performance.</li>
       </ul>
     </section>
 
